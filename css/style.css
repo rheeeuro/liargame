@@ -1,0 +1,190 @@
+html, body {
+  margin: 0;
+  box-sizing: border-box;
+  width: 100vw;
+  height: 100vh;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 1.2rem;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+li > span {
+  font-weight: bold;
+  
+}
+
+.overlay {
+  background-color: rgba(0, 0, 0, 0.4);
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+}
+
+.modal {
+  width: 18rem;
+  height: 8rem;
+  background-color: white;
+  border-radius: 5px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));  
+}
+
+.modal > input {
+  width: 12rem;
+  height: 1rem;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  padding: 0.6rem;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background-color: rgb(245, 248, 252);
+  filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));  
+}
+
+.modal > input:focus {
+  outline: none;
+}
+
+.content {
+  width: 120rem;
+  height: 60rem;
+  display: flex;
+  flex-direction: row;
+  background-color: #eee;
+}
+
+.gameContainer {
+  height: 100%;
+  width: 82rem;
+}
+
+.gameTitle {
+  height: 10rem;
+  width: 78rem;
+  margin: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.card {
+  height: 10rem;
+  width: 7rem;
+  background-color: rgb(96 165 250);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
+}
+
+.serverMessage {
+  width: 70rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: beige;
+  border-radius: 5px;
+  filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
+}
+
+.gameBoardContainer {
+  width: 78rem;
+  height: 42rem;
+  margin: 2rem;
+  display: flex;
+}
+
+.gameBoard {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+}
+
+.player {
+  background-color: aliceblue;
+  margin: 0.5rem;
+  width: 12rem;
+  height: 9rem;
+  border-radius: 10px;
+  filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  transition: all .1s ease-in-out;
+  position: relative;
+}
+
+.voteCounter {
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+}
+
+.player:hover {
+  transform: scale(1.1);
+  background-color: #ccc;
+  cursor: pointer;
+}
+
+.player h1 {
+  font-size: 1.5rem;
+}
+
+.svg {
+  width: 6rem;
+  height: 6rem;
+  margin-top: 1rem;
+  margin-bottom: -1.5rem;
+}
+
+.chatContainer {
+  height: 100%;
+  width: 34rem;
+  margin-left: 4rem;
+}
+
+.answer {
+  width: 30rem;
+  height: 22rem;
+  margin: 2rem;
+  background-color: antiquewhite;
+  filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
+}
+
+.chat {
+  width: 30rem;
+  height: 30rem;
+  margin: 2rem;
+  background-color: antiquewhite;
+  filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
+}
+
+.scrollable {
+  overflow-y: scroll;
+}
+
+.scrollable::-webkit-scrollbar {
+  width: 2px;
+}
+.scrollable::-webkit-scrollbar-thumb {
+  background-color: rgb(184, 184, 184);
+}
+.scrollable::-webkit-scrollbar-track {
+  background-color: #fdfdfd;
+}
