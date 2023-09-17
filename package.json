@@ -1,0 +1,24 @@
+{
+  "name": "liargame",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "dev:server": "nodemon node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rheeeuro/liargame.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rheeeuro/liargame/issues"
+  },
+  "homepage": "https://github.com/rheeeuro/liargame#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "nodemon": "^3.0.1",
+    "socket.io": "^4.7.2"
+  }
+}

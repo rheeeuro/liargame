@@ -1,8 +1,31 @@
-html, body {
+@font-face {
+  font-family: "TAEBAEKmilkyway";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/TAEBAEKmilkyway.woff2")
+    format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+html,
+body {
+  font-family: "TAEBAEKmilkyway";
   margin: 0;
   box-sizing: border-box;
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
+}
+
+input {
+  font-family: "TAEBAEKmilkyway";
 }
 
 ul {
@@ -12,12 +35,11 @@ ul {
 }
 
 li {
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 li > span {
   font-weight: bold;
-  
 }
 
 .overlay {
@@ -28,7 +50,15 @@ li > span {
   z-index: 1;
 }
 
-.modal {
+.loginContainer {
+  background-color: aliceblue;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+}
+
+.loginModal {
   width: 18rem;
   height: 8rem;
   background-color: white;
@@ -41,10 +71,11 @@ li > span {
   justify-content: center;
   align-items: center;
   transform: translate(-50%, -50%);
-  filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));  
+  filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07))
+    drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
 }
 
-.modal > input {
+.loginModal > input {
   width: 12rem;
   height: 1rem;
   border-radius: 5px;
@@ -52,10 +83,11 @@ li > span {
   padding: 0.6rem;
   border: 1px solid rgba(0, 0, 0, 0.2);
   background-color: rgb(245, 248, 252);
-  filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));  
+  filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.07))
+    drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
 }
 
-.modal > input:focus {
+.loginModal > input:focus {
   outline: none;
 }
 
@@ -89,17 +121,35 @@ li > span {
   justify-content: center;
   align-items: center;
   border-radius: 5px;
-  filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
+  filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07))
+    drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
 }
 
 .serverMessage {
-  width: 70rem;
+  width: 60rem;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: beige;
   border-radius: 5px;
-  filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
+  font-size: 2rem;
+  line-height: 3rem;
+  text-align: center;
+  font-weight: bold;
+  filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07))
+    drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
+}
+
+.timer {
+  width: 10rem;
+  width: 10rem;
+  border-radius: 5px;
+  background-color: aqua;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07))
+    drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
 }
 
 .gameBoardContainer {
@@ -121,12 +171,13 @@ li > span {
   width: 12rem;
   height: 9rem;
   border-radius: 10px;
-  filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
+  filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07))
+    drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
   display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  transition: all .1s ease-in-out;
+  transition: all 0.1s ease-in-out;
   position: relative;
 }
 
@@ -134,12 +185,26 @@ li > span {
   position: absolute;
   top: 0.5rem;
   right: 1rem;
+  width: 2rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
 }
 
-.player:hover {
+.voteCounter > svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.selectable:hover {
   transform: scale(1.1);
   background-color: #ccc;
   cursor: pointer;
+}
+
+.selected {
+  background-color: #ccc;
 }
 
 .player h1 {
@@ -147,10 +212,10 @@ li > span {
 }
 
 .svg {
-  width: 6rem;
-  height: 6rem;
+  width: 5rem;
+  height: 5rem;
   margin-top: 1rem;
-  margin-bottom: -1.5rem;
+  margin-bottom: -0.5rem;
 }
 
 .chatContainer {
@@ -164,7 +229,8 @@ li > span {
   height: 22rem;
   margin: 2rem;
   background-color: antiquewhite;
-  filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
+  filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07))
+    drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
 }
 
 .chat {
@@ -172,7 +238,31 @@ li > span {
   height: 30rem;
   margin: 2rem;
   background-color: antiquewhite;
-  filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
+  filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07))
+    drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
+  margin-bottom: 2rem;
+}
+
+.chat > ul {
+  margin-bottom: 2.5rem;
+}
+
+.chat_input {
+  position: fixed;
+  bottom: 2.3rem;
+  right: 1.5rem;
+  width: 27rem;
+  height: 3rem;
+  font-size: 1.5rem;
+  padding: 0rem 2rem;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07))
+    drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
+}
+
+.chat_input:focus {
+  outline: none;
 }
 
 .scrollable {
