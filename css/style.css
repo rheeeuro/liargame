@@ -42,6 +42,19 @@ li > span {
   font-weight: bold;
 }
 
+body > .loginContainer,
+body > .content {
+  display: none;
+}
+
+body.loggedIn > .content {
+  display: flex;
+}
+
+body.loggedOut > .loginContainer {
+  display: flex;
+}
+
 .overlay {
   background-color: rgba(0, 0, 0, 0.4);
   position: absolute;
@@ -75,7 +88,7 @@ li > span {
     drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
 }
 
-.loginModal > input {
+.loginModal input {
   width: 12rem;
   height: 1rem;
   border-radius: 5px;
@@ -87,7 +100,7 @@ li > span {
     drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
 }
 
-.loginModal > input:focus {
+.loginModal input:focus {
   outline: none;
 }
 
@@ -222,6 +235,7 @@ li > span {
   height: 100%;
   width: 34rem;
   margin-left: 4rem;
+  position: relative;
 }
 
 .answer {
@@ -248,7 +262,7 @@ li > span {
 }
 
 .chat_input {
-  position: fixed;
+  position: absolute;
   bottom: 2.3rem;
   right: 1.5rem;
   width: 27rem;

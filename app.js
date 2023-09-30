@@ -1,6 +1,7 @@
 const express = require("express");
 const { createServer } = require("node:http");
 const { Server } = require("socket.io");
+const { socketController } = require("./socketController");
 
 const app = express();
 const server = createServer(app);
@@ -22,8 +23,6 @@ function handleHome(req, res) {
 
 app.get("/", handleHome);
 
-io.on("connection", (socket) => {
-  console.log("a user connected");
-});
+io.on("connection", (socket) => socketController(socket));
 
 server.listen(4000, handleListening);
