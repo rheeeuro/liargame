@@ -495,7 +495,7 @@
         </div>
 
         <div class="chat scrollable">
-          <ul>
+          <ul id="jsMessages">
             <li>메시지메시지메시지메시지메시지메시지메시지</li>
             <li>메시지메시지메시지메시지메시지메시지메시지</li>
             <li>메시지메시지메시지메시지메시지메시지메시지</li>
@@ -521,7 +521,9 @@
             <li>메시지메시지메시지메시지메시지메시지메시지</li>
           </ul>
         </div>
-        <input class="chat_input"></input>
+        <form id="jsSendMsg">
+          <input class="chat_input" placeholder="채팅을 입력하세요."></input>
+        </form>
       </div>
     </div>
     <script src="/socket.io/socket.io.js"></script>
