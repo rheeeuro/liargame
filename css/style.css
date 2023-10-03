@@ -343,18 +343,20 @@ body.loggedOut > .loginContainer {
 
 .chat {
   width: 30rem;
-  height: 25rem;
+  height: 22rem;
   margin: 1rem;
   background-color: antiquewhite;
   filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07))
     drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
   margin-bottom: 2rem;
+  padding-bottom: 2rem;
 }
 
 .chat > ul {
   margin-bottom: 2.5rem;
   scroll-behavior: smooth;
   word-break: break-all;
+  position: absolute;
 }
 
 .chat_input {

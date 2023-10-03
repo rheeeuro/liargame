@@ -1,5 +1,7 @@
 import { getSocket } from "./sockets.js";
 
+const chatContainer = document.getElementById("jsChatContainer");
+const hintContainer = document.getElementById("jsHintContainer");
 const messages = document.getElementById("jsMessages");
 const sendMessage = document.getElementById("jsSendMsg");
 const hints = document.getElementById("jsHints");
@@ -12,8 +14,8 @@ const appendMessage = (text, nickname, color) => {
     <span style="color: ${color}">${nickname}:</span> ${text}
   `;
   messages.appendChild(li);
-  const position = messages.scrollHeight;
-  messages.scrollTop = position;
+  const position = chatContainer.scrollHeight;
+  chatContainer.scrollTop = position;
 };
 
 const appendHint = (text, nickname, color) => {
@@ -22,8 +24,8 @@ const appendHint = (text, nickname, color) => {
     <span style="color: ${color}">${nickname}:</span> ${text}
   `;
   hints.appendChild(li);
-  const position = hints.scrollHeight;
-  hints.scrollTop = position;
+  const position = hintContainer.scrollHeight;
+  hintContainer.scrollTop = position;
 };
 
 const appendVote = (nickname, targetNickname, color, targetColor) => {
