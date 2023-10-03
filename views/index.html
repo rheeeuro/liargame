@@ -21,510 +21,63 @@
       </div>
     </div>
     <div class="content">
-      <div class="overlay" style="display: none">
+      <div class="overlay" id="jsHintOverlay" style="display: none;">
         <div class="modal">
-          <input
+          <h1>20자 이내로<br/>제시어를 설명해주세요.</h1>
+          <form id="jsSendHint">
+            <input
             type="text"
             name="name"
             id="name"
-            placeholder="이름을 입력하세요."
-          />
+            placeholder="제시어 설명..."
+            autocomplete="off"
+            />
+          </form>
+        </div>
+      </div>
+      <div class="overlay" id="jsAnswerOverlay" style="display: none;">
+        <div class="modal">
+          <h1>라이어로 지목되셨습니다. <br/><br/>제시어를 맞춰주세요.</h1>
+          <form id="jsSendAnswer">
+            <input
+            type="text"
+            name="name"
+            id="name"
+            placeholder="정답.."
+            autocomplete="off"
+            />
+          </form>
         </div>
       </div>
       <div class="gameContainer">
         <div class="gameTitle">
-          <div class="card">라이어</div>
-          <div class="serverMessage">
-            두번째 제시어 설명이 종료되었습니다.<br />
-            2분간 자유롭게 대화하며 라이어로 의심되는 사람을 클릭해주세요.
+          <div class="card" id="jsCard">
+            <div class="cardContent front" id="jsCategory">카테고리</div>
+            <div class="cardContent back" id="jsWord">제시어</div>
+          </div>
+          <div class="serverMessage" id="jsServerNotifs">
           </div>
           <div class="timer">타이머</div>
         </div>
         <div class="gameBoardContainer">
-          <div class="gameBoard">
-            <div class="player selectable">
-              <div class="voteCounter">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M10.05 4.575a1.575 1.575 0 10-3.15 0v3m3.15-3v-1.5a1.575 1.575 0 013.15 0v1.5m-3.15 0l.075 5.925m3.075.75V4.575m0 0a1.575 1.575 0 013.15 0V15M6.9 7.575a1.575 1.575 0 10-3.15 0v8.175a6.75 6.75 0 006.75 6.75h2.018a5.25 5.25 0 003.712-1.538l1.732-1.732a5.25 5.25 0 001.538-3.712l.003-2.024a.668.668 0 01.198-.471 1.575 1.575 0 10-2.228-2.228 3.818 3.818 0 00-1.12 2.687M6.9 7.575V12m6.27 4.318A4.49 4.49 0 0116.35 15m.002 0h-.002" />
-                </svg>                
-                24</div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
-              <h1>name1</h1>
-            </div>
-            <div class="player selectable selected">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
-              <h1>name2</h1>
-            </div>
-            <div class="player selectable">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
-              <h1>name3</h1>
-            </div>
-            <div class="player selectable">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
-              <h1>name4</h1>
-            </div>
-            <div class="player selectable">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
-              <h1>name5</h1>
-            </div>
-            <div class="player selectable">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
-              <h1>name6</h1>
-            </div>
-            <div class="player selectable">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
-              <h1>name6</h1>
-            </div>
-            <div class="player selectable">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
-              <h1>name6</h1>
-            </div>
-            <div class="player selectable">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
-              <h1>name6</h1>
-            </div>
-            <div class="player selectable">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
-              <h1>name6</h1>
-            </div>
-            <div class="player selectable">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
-              <h1>name6</h1>
-            </div>
-            <div class="player selectable">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
-              <h1>name6</h1>
-            </div>
-            <div class="player selectable">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
-              <h1>name6</h1>
-            </div>
-            <div class="player selectable">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
-              <h1>name6</h1>
-            </div>
-            <div class="player selectable">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
-              <h1>name6</h1>
-            </div>
-            <div class="player selectable">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
-              <h1>name6</h1>
-            </div>
-            <div class="player selectable">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
-              <h1>name6</h1>
-            </div>
-            <div class="player selectable">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
-              <h1>name6</h1>
-            </div>
-            <div class="player selectable">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
-              <h1>name6</h1>
-            </div>
-            <div class="player selectable">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
-              <h1>name6</h1>
-            </div>
-            <div class="player selectable">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
-              <h1>name6</h1>
-            </div>
-            <div class="player selectable">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
-              <h1>name6</h1>
-            </div>
-            <div class="player selectable">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
-              <h1>name6</h1>
-            </div>
-            <div class="player selectable">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
-              <h1>name6</h1>
-            </div>
-          </div>
+          <div class="gameBoard" id="jsBoard"></div>
         </div>
         <div id="jsNotifications"></div>
       </div>
       <div class="chatContainer">
+        <div class="chatTitle">제시어 설명</div>
         <div class="answer scrollable">
-          <ul>
-            <li>
-              <span>name: </span>Lorem ipsum dolor, sit amet consectetur
-              adipisicing elit. Accusamus ab dolorem quae consectetur aliquid
-              animi impedit reiciendis possimus minus molestiae voluptates,
-              debitis obcaecati odio aut asperiores dolorum deserunt, voluptate
-              perspiciatis?
-            </li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-          </ul>
+          <ul id="jsHints"></ul>
         </div>
-
+        <div class="chatTitle">Chat</div>
         <div class="chat scrollable">
-          <ul id="jsMessages">
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-            <li>메시지메시지메시지메시지메시지메시지메시지</li>
-          </ul>
+          <ul id="jsMessages"></ul>
         </div>
         <form id="jsSendMsg">
           <input class="chat_input" placeholder="채팅을 입력하세요."></input>
         </form>
       </div>
+      <button class="startBtn" id="jsStartBtn">게임 시작!</button>
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script>

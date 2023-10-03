@@ -55,14 +55,6 @@ body.loggedOut > .loginContainer {
   display: flex;
 }
 
-.overlay {
-  background-color: rgba(0, 0, 0, 0.4);
-  position: absolute;
-  width: 100vw;
-  height: 100vh;
-  z-index: 1;
-}
-
 .loginContainer {
   background-color: aliceblue;
   position: absolute;
@@ -104,6 +96,44 @@ body.loggedOut > .loginContainer {
   outline: none;
 }
 
+.overlay {
+  background-color: rgba(0, 0, 0, 0.4);
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+}
+
+.modal {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 30rem;
+  height: 20rem;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  background-color: rgb(245, 248, 252);
+  border-radius: 15px;
+  left: 50%;
+  top: 50%;
+  filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.07))
+    drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
+}
+
+.modal input {
+  width: 25rem;
+  height: 4rem;
+  font-size: 1.5rem;
+  padding: 0.5rem;
+  border-radius: 15px;
+}
+
+.modal input:focus {
+  outline: none;
+}
+
 .content {
   width: 120rem;
   height: 60rem;
@@ -128,7 +158,9 @@ body.loggedOut > .loginContainer {
 
 .card {
   height: 10rem;
-  width: 7rem;
+  width: 12rem;
+  position: relative;
+  padding: 0.1rem;
   background-color: rgb(96 165 250);
   display: flex;
   justify-content: center;
@@ -138,8 +170,52 @@ body.loggedOut > .loginContainer {
     drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
 }
 
+.cardContent {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  transition: all 0.4s ease-in-out;
+  font-size: 1rem;
+}
+
+.cardContent.front {
+  opacity: 1;
+}
+.cardContent.back {
+  opacity: 0;
+}
+.card:hover > .front {
+  opacity: 0;
+}
+.card:hover > .back {
+  opacity: 1;
+}
+
+.card span {
+  display: block;
+  text-align: center;
+}
+
+.card span:first-child {
+  margin-bottom: 1rem;
+}
+
+.card span.bold {
+  font-size: 1.5rem;
+}
+
+.card span.liar {
+  font-size: 1.5rem;
+  line-height: 3rem;
+  color: red;
+}
+
 .serverMessage {
-  width: 60rem;
+  width: 55rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -151,6 +227,10 @@ body.loggedOut > .loginContainer {
   font-weight: bold;
   filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07))
     drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
+}
+
+.serverMessage span {
+  display: inline;
 }
 
 .timer {
@@ -194,6 +274,10 @@ body.loggedOut > .loginContainer {
   position: relative;
 }
 
+.player.voted {
+  background-color: #ccc;
+}
+
 .voteCounter {
   position: absolute;
   top: 0.5rem;
@@ -216,10 +300,6 @@ body.loggedOut > .loginContainer {
   cursor: pointer;
 }
 
-.selected {
-  background-color: #ccc;
-}
-
 .player h1 {
   font-size: 1.5rem;
 }
@@ -236,21 +316,35 @@ body.loggedOut > .loginContainer {
   width: 34rem;
   margin-left: 4rem;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .answer {
   width: 30rem;
   height: 22rem;
-  margin: 2rem;
+  margin: 1rem;
   background-color: antiquewhite;
   filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07))
     drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
 }
 
+.chatTitle {
+  font-size: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.answer li {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+}
+
 .chat {
   width: 30rem;
-  height: 30rem;
-  margin: 2rem;
+  height: 25rem;
+  margin: 1rem;
   background-color: antiquewhite;
   filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07))
     drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
@@ -259,23 +353,13 @@ body.loggedOut > .loginContainer {
 
 .chat > ul {
   margin-bottom: 2.5rem;
-}
-
-li > span {
-  font-weight: 600;
-}
-
-li > span.self {
-  color: blue;
-}
-
-li > span.out {
-  color: orange;
+  scroll-behavior: smooth;
+  word-break: break-all;
 }
 
 .chat_input {
   position: absolute;
-  bottom: 2.3rem;
+  bottom: 3.2rem;
   right: 1.5rem;
   width: 27rem;
   height: 3rem;
@@ -345,4 +429,19 @@ li > span.out {
     dissapear 0.5s ease-in forwards;
   animation-delay: 0.5s, 2s;
   color: white;
+}
+
+.startBtn {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  left: 50%;
+  width: 10rem;
+  height: 5rem;
+  border-radius: 1rem;
+  background-color: #fdfdfd;
+  font-size: 1.5rem;
+  transform: translate(-50%, -50%);
+  font-family: "TAEBAEKmilkyway";
+  cursor: pointer;
 }

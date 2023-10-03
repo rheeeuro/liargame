@@ -26,6 +26,6 @@ function handleHome(req, res) {
 
 app.get("/", handleHome);
 
-io.on("connection", (socket) => socketController(socket));
+io.on("connection", (socket) => socketController(socket, io));
 
 server.listen(4000, handleListening);
