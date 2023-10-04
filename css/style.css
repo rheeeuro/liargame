@@ -241,8 +241,13 @@ body.loggedOut > .loginContainer {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 3rem;
   filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07))
     drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
+}
+
+.timer > span {
+  font-size: 1rem;
 }
 
 .gameBoardContainer {

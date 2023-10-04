@@ -4,8 +4,14 @@ const board = document.getElementById("jsBoard");
 const notifs = document.getElementById("jsServerNotifs");
 const startBtn = document.getElementById("jsStartBtn");
 const card = document.getElementById("jsCard");
+const timer = document.getElementById("jsTimer");
 
 const addPlayers = (players) => {
+  if (players.length >= 3) {
+    startBtn.style.display = "block";
+  } else { 
+    startBtn.style.display = "none";
+  }
   board.innerHTML = "";
   players.forEach((player) => {
     const playerElement = document.createElement("div");
@@ -144,7 +150,18 @@ export const handleGameStarted = ({ liar, word }) => {
     "라이어가 선정되었습니다. <br/>좌측에 마우스를 올려 제시어를 확인해주세요."
   );
   setCard(liar, word);
-  setTimeout(requestHint, 5000);
+
+  let time = 11;
+  const intervalId = setInterval(() => { 
+    time -= 1;
+    timer.innerText = time;
+
+    if (time === 0) { 
+      timer.innerHTML = "<span>타이머</span>";
+      requestHint();
+      clearInterval(intervalId);
+    }
+  }, 1000);
 };
 
 export const handleGameEnded = () => {
