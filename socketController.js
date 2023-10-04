@@ -100,7 +100,7 @@ const socketController = (socket, io) => {
 
   socket.on(events.disconnect, () => {
     sockets = sockets.filter((s) => s.id !== socket.id);
-    if (sockets.length < 1) {
+    if (sockets.length < 3 || socket.id === liar.id) {
       endGame();
     }
     broadcast(events.disconnected, { nickname: socket.nickname });
