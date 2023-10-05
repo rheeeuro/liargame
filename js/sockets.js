@@ -10,6 +10,7 @@ import { handleDisconnected, handleNewUser } from "./notifications.js";
 import {
   handleGameEnded,
   handleGameStarted,
+  handleHintTurn,
   handleLiarLose,
   handleLiarWin,
   handlePlayerUpdate,
@@ -29,6 +30,7 @@ export const initSockets = (newSocket) => {
   socket.on(events.newUser, handleNewUser);
   socket.on(events.disconnected, handleDisconnected);
   socket.on(events.newMessage, handleNewMessage);
+  socket.on(events.hintTurn, handleHintTurn);
   socket.on(events.newHint, handleNewHint);
   socket.on(events.voteStarted, handleVoteStarted);
   socket.on(events.voteEnded, handleVoteEnded);

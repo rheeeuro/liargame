@@ -1,16 +1,19 @@
+import { autoSendHint } from "./chat.js";
 import { getSocket } from "./sockets.js";
 
 const board = document.getElementById("jsBoard");
 const notifs = document.getElementById("jsServerNotifs");
-const startBtn = document.getElementById("jsStartBtn");
+const readyBtn = document.getElementById("jsReadyBtn");
 const card = document.getElementById("jsCard");
 const timer = document.getElementById("jsTimer");
 
+export let hintIntervalId = null;
+
 const addPlayers = (players) => {
   if (players.length >= 3) {
-    startBtn.style.display = "block";
+    readyBtn.style.display = "block";
   } else { 
-    startBtn.style.display = "none";
+    readyBtn.style.display = "none";
   }
   board.innerHTML = "";
   players.forEach((player) => {
@@ -127,11 +130,6 @@ const setCard = (liar, word) => {
   `;
 };
 
-const startGame = () => {
-  setNotifs("게임이 시작됩니다.");
-  getSocket().emit(window.events.startGame);
-};
-
 const requestHint = () => {
   document.getElementById("jsHintOverlay").style.display = "flex";
 };
@@ -145,7 +143,7 @@ export const handlePlayerVoteUpdate = ({ sockets }) => {
 };
 
 export const handleGameStarted = ({ liar, word }) => {
-  startBtn.style.display = "none";
+  readyBtn.style.display = "none";
   setNotifs(
     "라이어가 선정되었습니다. <br/>좌측에 마우스를 올려 제시어를 확인해주세요."
   );
@@ -158,13 +156,35 @@ export const handleGameStarted = ({ liar, word }) => {
 
     if (time === 0) { 
       timer.innerHTML = "<span>타이머</span>";
-      requestHint();
       clearInterval(intervalId);
     }
   }, 1000);
 };
 
+export const handleHintTurn = ({ id, nickname, color }) => {
+  clearInterval(hintIntervalId);
+  setNotifs(
+    `<span style="color:${color}">${nickname}</span>님의 차례입니다. <br/>30초 내에 20자 이내로 제시어에 대한 설명을 작성해주세요.`
+  );
+
+  if (getSocket().id === id) { 
+    requestHint();
+  }
+
+  let time = 31;
+  hintIntervalId = setInterval(() => { 
+    time -= 1;
+    timer.innerText = time;
+
+    if (time === 0 && getSocket().id === id) { 
+      autoSendHint("시간 초과");
+    }
+  }, 1000);
+}
+
 export const handleGameEnded = () => {
+  clearInterval(hintIntervalId);
+  timer.innerHTML = "<span>타이머</span>";
   setNotifs(
     "게임이 종료되었습니다. <br/>다음 게임이 시작될 때까지 기다려주세요."
   );
@@ -173,10 +193,12 @@ export const handleGameEnded = () => {
   <div class="cardContent back" id="jsWord">제시어</div>
   `;
   document.getElementById("jsHints").innerHTML = "";
-  startBtn.style.display = "block";
+  readyBtn.style.display = "block";
 };
 
 export const handleVoteNotification = () => {
+  clearInterval(hintIntervalId);
+  timer.innerHTML = "<span>타이머</span>";
   setNotifs(
     "제시어 설명이 종료되었습니다. <br/>라이어로 의심되는 사람을 선택해주세요."
   );
@@ -205,6 +227,16 @@ export const handleVoteFailed = ({ nickname, color }) => {
   );
 };
 
-if (startBtn) {
-  startBtn.addEventListener("click", startGame);
+if (readyBtn) {
+  readyBtn.addEventListener("click", () => {
+    if (readyBtn.classList.contains("ready")) {
+      readyBtn.innerText = "준비";
+      readyBtn.classList.remove("ready")
+      getSocket().emit(window.events.cancelReadyGame);
+    } else { 
+      readyBtn.innerText = "준비 완료";
+      readyBtn.classList.add("ready")
+      getSocket().emit(window.events.readyGame);
+    }
+  });
 }

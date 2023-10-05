@@ -2,11 +2,13 @@ const { events, colors } = require("./event");
 const { chooseWord } = require("./words");
 
 let sockets = [];
+let hintOrder = [];
 let inProgress = false;
 let word = null;
 let liar = null;
 let hintCount = 0;
 let voteCount = 0;
+let readyCount = 0;
 
 const chooseLiar = () => sockets[Math.floor(Math.random() * sockets.length)];
 
@@ -21,7 +23,7 @@ const socketController = (socket, io) => {
     });
   };
 
-  const sendPlayerUpdate = () =>
+  const sendPlayerUpdate = () => 
     superBroadcast(events.playerUpdate, { sockets });
 
   const sendPlayerVoteUpdate = () => {
@@ -57,13 +59,23 @@ const socketController = (socket, io) => {
     if (inProgress === false) {
       hintCount = 0;
       voteCount = 0;
+      hintTurnIdx = 0;
       inProgress = true;
       liar = chooseLiar();
       word = chooseWord();
+
       console.log(liar);
       console.log(word);
 
       superBroadcast(events.gameStarted, { liar, word });
+      hintOrder = sockets.map(s => ({ id: s.id, nickname: s.nickname, color: s.color }));
+      hintOrder.sort(() => Math.random() - 0.5);
+
+      
+
+      setTimeout(() => {
+        superBroadcast(events.hintTurn, { id: hintOrder[hintCount].id, nickname: hintOrder[hintCount].nickname, color: hintOrder[hintCount].color });
+      }, 11000);
     }
   };
 
@@ -73,6 +85,7 @@ const socketController = (socket, io) => {
     word = null;
     hintCount = 0;
     voteCount = 0;
+    readyCount = 0;
     sockets.forEach((s) => {
       s.voteCount = 0;
       s.voted = null;
@@ -96,13 +109,12 @@ const socketController = (socket, io) => {
     broadcast(events.newUser, { nickname });
     updateColor();
     sendPlayerUpdate();
+    readyCount = 0;
   });
 
   socket.on(events.disconnect, () => {
     sockets = sockets.filter((s) => s.id !== socket.id);
-    if (sockets.length < 3 || socket.id === liar.id) {
-      endGame();
-    }
+    endGame();
     broadcast(events.disconnected, { nickname: socket.nickname });
     updateColor();
     sendPlayerUpdate();
@@ -127,6 +139,8 @@ const socketController = (socket, io) => {
     if (hintCount === sockets.length) {
       superBroadcast(events.voteStarted);
       superBroadcast(events.voteNotification);
+    } else { 
+      superBroadcast(events.hintTurn, { id: hintOrder[hintCount].id, nickname: hintOrder[hintCount].nickname, color: hintOrder[hintCount].color });
     }
   });
 
@@ -192,9 +206,17 @@ const socketController = (socket, io) => {
     endGame();
   });
 
-  socket.on(events.startGame, () => {
-    startGame();
-  });
+  socket.on(events.readyGame, () => { 
+    readyCount += 1;
+    console.log(readyCount, sockets)
+    if (readyCount === sockets.length) { 
+      startGame();
+    }
+  })
+
+  socket.on(events.cancelReadyGame, () => { 
+    readyCount -= 1;
+  })
 };
 
 module.exports = { socketController };

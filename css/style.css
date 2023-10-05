@@ -438,7 +438,7 @@ body.loggedOut > .loginContainer {
   color: white;
 }
 
-.startBtn {
+.readyBtn {
   position: absolute;
   z-index: 3;
   top: 50%;

@@ -1,3 +1,4 @@
+import { hintIntervalId } from "./players.js";
 import { getSocket } from "./sockets.js";
 
 const chatContainer = document.getElementById("jsChatContainer");
@@ -57,8 +58,14 @@ const handleSendHint = (event) => {
   event.preventDefault();
   const input = sendHint.querySelector("input");
   const { value } = input;
-  getSocket().emit(window.events.sendHint, { hint: value });
+  autoSendHint(value);
   input.value = "";
+};
+
+export const autoSendHint = (value) => {
+  clearInterval(hintIntervalId);
+  document.getElementById("jsTimer").innerHTML = "<span>타이머</span>";
+  getSocket().emit(window.events.sendHint, { hint: value });
   hintOverlay.style.display = "none";
 };
 

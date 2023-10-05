@@ -5,6 +5,7 @@ const events = {
   disconnected: "disconnected",
   sendMessage: "sendMessage",
   newMessage: "newMessage",
+  hintTurn: "hintTurn",
   sendHint: "sendHint",
   newHint: "newHint",
   voteStarted: "voteStarted",
@@ -21,7 +22,8 @@ const events = {
   playerVoteUpdate: "playerVoteUpdate",
   liarWin: "liarWin",
   liarLose: "liarLose",
-  startGame: "startGame",
+  readyGame: "readyGame",
+  cancelReadyGame: "cancelReadyGame",
   gameStarted: "gameStarted",
   gameEnded: "gameEnded",
 };
