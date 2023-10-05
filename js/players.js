@@ -12,7 +12,7 @@ export let hintIntervalId = null;
 const addPlayers = (players) => {
   if (players.length >= 3) {
     readyBtn.style.display = "block";
-  } else { 
+  } else {
     readyBtn.style.display = "none";
   }
   board.innerHTML = "";
@@ -135,7 +135,10 @@ const requestHint = () => {
 };
 
 export const handlePlayerUpdate = ({ sockets }) => {
+  readyBtn.innerText = "준비";
+  readyBtn.classList.remove("ready");
   addPlayers(sockets);
+  getSocket().emit(window.events.requestUpdateColor);
 };
 
 export const handlePlayerVoteUpdate = ({ sockets }) => {
@@ -150,11 +153,11 @@ export const handleGameStarted = ({ liar, word }) => {
   setCard(liar, word);
 
   let time = 11;
-  const intervalId = setInterval(() => { 
+  const intervalId = setInterval(() => {
     time -= 1;
     timer.innerText = time;
 
-    if (time === 0) { 
+    if (time === 0) {
       timer.innerHTML = "<span>타이머</span>";
       clearInterval(intervalId);
     }
@@ -167,20 +170,20 @@ export const handleHintTurn = ({ id, nickname, color }) => {
     `<span style="color:${color}">${nickname}</span>님의 차례입니다. <br/>30초 내에 20자 이내로 제시어에 대한 설명을 작성해주세요.`
   );
 
-  if (getSocket().id === id) { 
+  if (getSocket().id === id) {
     requestHint();
   }
 
   let time = 31;
-  hintIntervalId = setInterval(() => { 
+  hintIntervalId = setInterval(() => {
     time -= 1;
     timer.innerText = time;
 
-    if (time === 0 && getSocket().id === id) { 
+    if (time === 0 && getSocket().id === id) {
       autoSendHint("시간 초과");
     }
   }, 1000);
-}
+};
 
 export const handleGameEnded = () => {
   clearInterval(hintIntervalId);
@@ -227,15 +230,19 @@ export const handleVoteFailed = ({ nickname, color }) => {
   );
 };
 
+export const handleReadyNotif = ({ cur, total }) => {
+  setNotifs(`${cur} / ${total}`);
+};
+
 if (readyBtn) {
   readyBtn.addEventListener("click", () => {
     if (readyBtn.classList.contains("ready")) {
       readyBtn.innerText = "준비";
-      readyBtn.classList.remove("ready")
+      readyBtn.classList.remove("ready");
       getSocket().emit(window.events.cancelReadyGame);
-    } else { 
+    } else {
       readyBtn.innerText = "준비 완료";
-      readyBtn.classList.add("ready")
+      readyBtn.classList.add("ready");
       getSocket().emit(window.events.readyGame);
     }
   });

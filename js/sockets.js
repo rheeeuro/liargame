@@ -15,6 +15,7 @@ import {
   handleLiarWin,
   handlePlayerUpdate,
   handlePlayerVoteUpdate,
+  handleReadyNotif,
   handleVoteEnded,
   handleVoteFailed,
   handleVoteNotification,
@@ -43,6 +44,7 @@ export const initSockets = (newSocket) => {
   socket.on(events.playerVoteUpdate, handlePlayerVoteUpdate);
   socket.on(events.liarWin, handleLiarWin);
   socket.on(events.liarLose, handleLiarLose);
+  socket.on(events.readyNotif, handleReadyNotif);
   socket.on(events.gameStarted, handleGameStarted);
   socket.on(events.gameEnded, handleGameEnded);
 };

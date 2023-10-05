@@ -23,7 +23,7 @@ const socketController = (socket, io) => {
     });
   };
 
-  const sendPlayerUpdate = () => 
+  const sendPlayerUpdate = () =>
     superBroadcast(events.playerUpdate, { sockets });
 
   const sendPlayerVoteUpdate = () => {
@@ -68,13 +68,19 @@ const socketController = (socket, io) => {
       console.log(word);
 
       superBroadcast(events.gameStarted, { liar, word });
-      hintOrder = sockets.map(s => ({ id: s.id, nickname: s.nickname, color: s.color }));
+      hintOrder = sockets.map((s) => ({
+        id: s.id,
+        nickname: s.nickname,
+        color: s.color,
+      }));
       hintOrder.sort(() => Math.random() - 0.5);
 
-      
-
       setTimeout(() => {
-        superBroadcast(events.hintTurn, { id: hintOrder[hintCount].id, nickname: hintOrder[hintCount].nickname, color: hintOrder[hintCount].color });
+        superBroadcast(events.hintTurn, {
+          id: hintOrder[hintCount].id,
+          nickname: hintOrder[hintCount].nickname,
+          color: hintOrder[hintCount].color,
+        });
       }, 11000);
     }
   };
@@ -106,19 +112,23 @@ const socketController = (socket, io) => {
       color: "#000000",
       voted: null,
     });
-    broadcast(events.newUser, { nickname });
     updateColor();
+    broadcast(events.newUser, { nickname });
     sendPlayerUpdate();
     readyCount = 0;
   });
 
   socket.on(events.disconnect, () => {
     sockets = sockets.filter((s) => s.id !== socket.id);
-    endGame();
+    readyCount = 0;
+    if (inProgress) {
+      endGame();
+    }
     broadcast(events.disconnected, { nickname: socket.nickname });
-    updateColor();
     sendPlayerUpdate();
   });
+
+  socket.on(events.requestUpdateColor, updateColor);
 
   socket.on(events.sendMessage, ({ message }) => {
     superBroadcast(events.newMessage, {
@@ -139,8 +149,12 @@ const socketController = (socket, io) => {
     if (hintCount === sockets.length) {
       superBroadcast(events.voteStarted);
       superBroadcast(events.voteNotification);
-    } else { 
-      superBroadcast(events.hintTurn, { id: hintOrder[hintCount].id, nickname: hintOrder[hintCount].nickname, color: hintOrder[hintCount].color });
+    } else {
+      superBroadcast(events.hintTurn, {
+        id: hintOrder[hintCount].id,
+        nickname: hintOrder[hintCount].nickname,
+        color: hintOrder[hintCount].color,
+      });
     }
   });
 
@@ -206,17 +220,29 @@ const socketController = (socket, io) => {
     endGame();
   });
 
-  socket.on(events.readyGame, () => { 
+  socket.on(events.readyGame, () => {
     readyCount += 1;
-    console.log(readyCount, sockets)
-    if (readyCount === sockets.length) { 
+    console.log(readyCount, sockets);
+    if (readyCount === sockets.length) {
       startGame();
+    } else {
+      superBroadcast(events.readyNotif, {
+        cur: readyCount,
+        total: sockets.length,
+      });
     }
-  })
+  });
 
-  socket.on(events.cancelReadyGame, () => { 
+  socket.on(events.cancelReadyGame, () => {
     readyCount -= 1;
-  })
+    if (readyCount < 0) {
+      readyCount = 0;
+    }
+    superBroadcast(events.readyNotif, {
+      cur: readyCount,
+      total: sockets.length,
+    });
+  });
 };
 
 module.exports = { socketController };

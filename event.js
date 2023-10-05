@@ -19,11 +19,13 @@ const events = {
   requestAnswer: "requestAnswer",
   sendAnswer: "sendAnswer",
   playerUpdate: "playerUpdate",
+  requestUpdateColor: "requestUpdateColor",
   playerVoteUpdate: "playerVoteUpdate",
   liarWin: "liarWin",
   liarLose: "liarLose",
   readyGame: "readyGame",
   cancelReadyGame: "cancelReadyGame",
+  readyNotif: "readyNotif",
   gameStarted: "gameStarted",
   gameEnded: "gameEnded",
 };
