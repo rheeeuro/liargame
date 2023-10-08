@@ -7,8 +7,8 @@ let inProgress = false;
 let word = null;
 let liar = null;
 let hintCount = 0;
-let voteCount = 0;
-let readyCount = 0;
+
+let timeout = null;
 
 const chooseLiar = () => sockets[Math.floor(Math.random() * sockets.length)];
 
@@ -23,12 +23,15 @@ const socketController = (socket, io) => {
     });
   };
 
-  const sendPlayerUpdate = () =>
+  const sendPlayerUpdate = () => {
+    updateColor();
     superBroadcast(events.playerUpdate, { sockets });
-
-  const sendPlayerVoteUpdate = () => {
-    superBroadcast(events.playerVoteUpdate, { sockets });
   };
+
+  socket.on(events.requestUpdateColor, updateColor);
+
+  const sendPlayerVoteUpdate = () =>
+    superBroadcast(events.playerVoteUpdate, { sockets });
 
   const handleVoteEnded = () => {
     let max = null;
@@ -40,22 +43,36 @@ const socketController = (socket, io) => {
       }
     });
 
-    if (max.id === liar.id) {
-      superBroadcast(events.voteEnded, {
-        nickname: liar.nickname,
-        color: liar.color,
+    if (sockets.filter((s) => s.voteCount === max.voteCount).length > 1) {
+      superBroadcast(events.duplicatedVote);
+      sockets.forEach((s) => {
+        s.voted = null;
+        s.voteCount = 0;
       });
-      superBroadcast(events.requestAnswer, { id: liar.id });
+      setTimeout(() => {
+        superBroadcast(events.voteStarted);
+        superBroadcast(events.revoteNotification);
+        sendPlayerVoteUpdate();
+      }, 5000);
     } else {
-      superBroadcast(events.voteFailed, {
-        nickname: liar.nickname,
-        color: liar.color,
-      });
-      endGame();
+      if (max.id === liar.id) {
+        superBroadcast(events.voteEnded, {
+          nickname: liar.nickname,
+          color: liar.color,
+          liarId: liar.id,
+        });
+      } else {
+        superBroadcast(events.voteFailed, {
+          nickname: liar.nickname,
+          color: liar.color,
+        });
+        endGame();
+      }
     }
   };
 
   const startGame = () => {
+    sendPlayerUpdate();
     if (inProgress === false) {
       hintCount = 0;
       voteCount = 0;
@@ -64,8 +81,7 @@ const socketController = (socket, io) => {
       liar = chooseLiar();
       word = chooseWord();
 
-      console.log(liar);
-      console.log(word);
+      console.log(liar.nickname, word.word);
 
       superBroadcast(events.gameStarted, { liar, word });
       hintOrder = sockets.map((s) => ({
@@ -75,7 +91,8 @@ const socketController = (socket, io) => {
       }));
       hintOrder.sort(() => Math.random() - 0.5);
 
-      setTimeout(() => {
+      timeout = setTimeout(() => {
+        sendPlayerUpdate();
         superBroadcast(events.hintTurn, {
           id: hintOrder[hintCount].id,
           nickname: hintOrder[hintCount].nickname,
@@ -90,20 +107,17 @@ const socketController = (socket, io) => {
     liar = null;
     word = null;
     hintCount = 0;
-    voteCount = 0;
-    readyCount = 0;
     sockets.forEach((s) => {
       s.voteCount = 0;
       s.voted = null;
+      s.ready = false;
     });
-    setTimeout(() => {
-      superBroadcast(events.gameEnded);
-      superBroadcast(events.playerUpdate, { sockets });
-    }, 5000);
+    clearTimeout(timeout);
+    sendPlayerUpdate();
+    superBroadcast(events.gameEnded);
   };
 
   socket.on(events.setNickname, ({ nickname }) => {
-    if (inProgress) return;
     socket.nickname = nickname;
     sockets.push({
       id: socket.id,
@@ -111,24 +125,17 @@ const socketController = (socket, io) => {
       voteCount: 0,
       color: "#000000",
       voted: null,
+      ready: false,
     });
-    updateColor();
+    endGame();
     broadcast(events.newUser, { nickname });
-    sendPlayerUpdate();
-    readyCount = 0;
   });
 
   socket.on(events.disconnect, () => {
     sockets = sockets.filter((s) => s.id !== socket.id);
-    readyCount = 0;
-    if (inProgress) {
-      endGame();
-    }
     broadcast(events.disconnected, { nickname: socket.nickname });
-    sendPlayerUpdate();
+    endGame();
   });
-
-  socket.on(events.requestUpdateColor, updateColor);
 
   socket.on(events.sendMessage, ({ message }) => {
     superBroadcast(events.newMessage, {
@@ -160,7 +167,7 @@ const socketController = (socket, io) => {
 
   socket.on(events.sendVote, ({ target }) => {
     socket.voted = target;
-    voteCount += 1;
+    let voteCount = 0;
     let targetNickname = "";
     let targetColor = "#000000";
     sockets.forEach((s) => {
@@ -171,6 +178,9 @@ const socketController = (socket, io) => {
         s.voteCount += 1;
         targetNickname = s.nickname;
         targetColor = s.color;
+      }
+      if (s.voted != null) {
+        voteCount += 1;
       }
       return s;
     });
@@ -221,27 +231,24 @@ const socketController = (socket, io) => {
   });
 
   socket.on(events.readyGame, () => {
-    readyCount += 1;
-    console.log(readyCount, sockets);
+    let readyCount = 0;
+    sockets.forEach((s) => {
+      if (s.id === socket.id) s.ready = true;
+      if (s.ready) readyCount += 1;
+    });
+
     if (readyCount === sockets.length) {
       startGame();
     } else {
-      superBroadcast(events.readyNotif, {
-        cur: readyCount,
-        total: sockets.length,
-      });
+      sendPlayerUpdate();
     }
   });
 
   socket.on(events.cancelReadyGame, () => {
-    readyCount -= 1;
-    if (readyCount < 0) {
-      readyCount = 0;
-    }
-    superBroadcast(events.readyNotif, {
-      cur: readyCount,
-      total: sockets.length,
+    sockets.forEach((s) => {
+      if (s.id === socket.id) s.ready = false;
     });
+    sendPlayerUpdate();
   });
 };
 

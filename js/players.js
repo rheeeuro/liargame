@@ -1,26 +1,62 @@
-import { autoSendHint } from "./chat.js";
+import { closeAnswerModal } from "./answer.js";
+import {
+  autoSendHint,
+  closeHintModal,
+  disableVote,
+  votePlayer,
+} from "./chat.js";
 import { getSocket } from "./sockets.js";
 
 const board = document.getElementById("jsBoard");
 const notifs = document.getElementById("jsServerNotifs");
 const readyBtn = document.getElementById("jsReadyBtn");
-const card = document.getElementById("jsCard");
+const cardCategory = document.getElementById("jsCategory");
+const cardWord = document.getElementById("jsWord");
 const timer = document.getElementById("jsTimer");
 
+const WORD_TIME = 10;
+const HINT_TIME = 30;
+const DUPLICATED_TIME = 5;
+
 export let hintIntervalId = null;
+let wordIntervalId = null;
+let duplicatedIntervalId = null;
+
+let inProgress = false;
+
+export const clearAllInterval = () => {
+  clearInterval(hintIntervalId);
+  clearInterval(wordIntervalId);
+  clearInterval(duplicatedIntervalId);
+};
 
 const addPlayers = (players) => {
-  if (players.length >= 3) {
-    readyBtn.style.display = "block";
-  } else {
-    readyBtn.style.display = "none";
+  if (!inProgress) {
+    if (players.length >= 3) {
+      readyBtn.style.display = "block";
+    } else {
+      readyBtn.style.display = "none";
+    }
   }
+
   board.innerHTML = "";
   players.forEach((player) => {
     const playerElement = document.createElement("div");
     playerElement.id = player.id;
     playerElement.classList.add("player");
+    if (player.ready && inProgress === false) {
+      playerElement.classList.add("ready");
+    }
     playerElement.innerHTML = `
+    <div class="ready">
+      <svg fill="${player.color}" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg" id="playerReady">
+        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+        <g id="SVGRepo_iconCarrier">
+          <path d="M4 11H6V12H7V13H8V14H10V13H11V12H12V11H13V10H14V9H15V8H16V7H17V6H19V8H18V9H17V10H16V11H15V12H14V13H13V14H12V15H11V16H10V17H8V16H7V15H6V14H5V13H4V11Z"></path>
+        </g>
+      </svg>
+    </div>
     <div class="voteCounter" style="display: none;">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -38,19 +74,12 @@ const addPlayers = (players) => {
       </svg>
       ${player.voteCount}
     </div>
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke-width="1.5"
-      stroke="${player.color}"
-      class="svg"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-      />
+    <svg fill="${player.color}" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg" id="player">
+      <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+      <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+      <g id="SVGRepo_iconCarrier">
+        <path d="M9 3H13V4H14V5H15V9H14V10H13V11H9V10H8V9H7V5H8V4H9V3M10 8V9H12V8H13V6H12V5H10V6H9V8H10M7 12H15V13H17V14H18V15H19V19H3V15H4V14H5V13H7V12M6 16H5V17H17V16H16V15H14V14H8V15H6V16Z"></path>
+      </g>
     </svg>
     <h1>${player.nickname}</h1>
     `;
@@ -89,45 +118,36 @@ const addVotePlayers = (players) => {
       </svg>
       ${player.voteCount}
     </div>
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke-width="1.5"
-      stroke="${player.color}"
-      class="svg"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-      />
+    
+
+    <svg fill="${player.color}" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg" id="player">
+      <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+      <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+      <g id="SVGRepo_iconCarrier">
+        <path d="M9 3H13V4H14V5H15V9H14V10H13V11H9V10H8V9H7V5H8V4H9V3M10 8V9H12V8H13V6H12V5H10V6H9V8H10M7 12H15V13H17V14H18V15H19V19H3V15H4V14H5V13H7V12M6 16H5V17H17V16H16V15H14V14H8V15H6V16Z"></path>
+      </g>
     </svg>
+
     <h1>${player.nickname}</h1>
     `;
     board.appendChild(playerElement);
   });
 };
 
-const setNotifs = (text) => {
+export const setNotifs = (text) => {
   notifs.innerHTML = "";
   notifs.innerHTML = `<div>${text}</div>`;
 };
 
 const setCard = (liar, word) => {
-  card.innerHTML = `
-  <div class="cardContent front" id="jsCategory">
+  cardCategory.innerHTML = `
     <span>카테고리</span>
     <span class="bold">${word.category}</span>
-  </div>
-  <div class="cardContent back" id="jsWord">
-  ${
-    getSocket().id === liar.id
-      ? `<span class="liar">당신은 <br/>라이어입니다.</span>`
-      : `<span>제시어</span><span class="bold">${word.word}</span>`
-  }
-  </div>
   `;
+  cardWord.innerHTML =
+    getSocket().id === liar.id
+      ? `<span class="liar">당신은<br/>라이어<br/>입니다</span>`
+      : `<span>제시어</span><span class="bold">${word.word}</span>`;
 };
 
 const requestHint = () => {
@@ -135,8 +155,25 @@ const requestHint = () => {
 };
 
 export const handlePlayerUpdate = ({ sockets }) => {
-  readyBtn.innerText = "준비";
-  readyBtn.classList.remove("ready");
+  let ready = false;
+  sockets.forEach((s) => {
+    if (s.id === getSocket().id) ready = s.ready;
+  });
+
+  if (ready) {
+    readyBtn.innerText = "준비 완료";
+    readyBtn.classList.add("ready");
+  } else {
+    readyBtn.innerText = "준비";
+    readyBtn.classList.remove("ready");
+  }
+
+  if (inProgress) {
+    readyBtn.style.display = "none";
+  } else {
+    readyBtn.style.display = "flex";
+  }
+
   addPlayers(sockets);
   getSocket().emit(window.events.requestUpdateColor);
 };
@@ -147,19 +184,20 @@ export const handlePlayerVoteUpdate = ({ sockets }) => {
 
 export const handleGameStarted = ({ liar, word }) => {
   readyBtn.style.display = "none";
+  inProgress = true;
   setNotifs(
     "라이어가 선정되었습니다. <br/>좌측에 마우스를 올려 제시어를 확인해주세요."
   );
   setCard(liar, word);
 
-  let time = 11;
-  const intervalId = setInterval(() => {
+  let time = WORD_TIME + 1;
+  wordIntervalId = setInterval(() => {
     time -= 1;
     timer.innerText = time;
 
     if (time === 0) {
-      timer.innerHTML = "<span>타이머</span>";
-      clearInterval(intervalId);
+      timer.innerHTML = "";
+      clearInterval(wordIntervalId);
     }
   }, 1000);
 };
@@ -167,14 +205,14 @@ export const handleGameStarted = ({ liar, word }) => {
 export const handleHintTurn = ({ id, nickname, color }) => {
   clearInterval(hintIntervalId);
   setNotifs(
-    `<span style="color:${color}">${nickname}</span>님의 차례입니다. <br/>30초 내에 20자 이내로 제시어에 대한 설명을 작성해주세요.`
+    `<span style="color:${color}">${nickname}</span>님의 차례입니다. <br/>30초 내에 제시어에 대한 설명을 작성해주세요.`
   );
 
   if (getSocket().id === id) {
     requestHint();
   }
 
-  let time = 31;
+  let time = HINT_TIME + 1;
   hintIntervalId = setInterval(() => {
     time -= 1;
     timer.innerText = time;
@@ -186,31 +224,49 @@ export const handleHintTurn = ({ id, nickname, color }) => {
 };
 
 export const handleGameEnded = () => {
-  clearInterval(hintIntervalId);
-  timer.innerHTML = "<span>타이머</span>";
+  inProgress = false;
+  clearAllInterval();
+  closeAnswerModal();
+  closeHintModal();
+
+  timer.innerHTML = "";
   setNotifs(
     "게임이 종료되었습니다. <br/>다음 게임이 시작될 때까지 기다려주세요."
   );
-  card.innerHTML = `
-  <div class="cardContent front" id="jsCategory">카테고리</div>
-  <div class="cardContent back" id="jsWord">제시어</div>
-  `;
+  cardCategory.innerHTML = "카테고리";
+  cardWord.innerHTML = "제시어";
   document.getElementById("jsHints").innerHTML = "";
   readyBtn.style.display = "block";
 };
 
 export const handleVoteNotification = () => {
   clearInterval(hintIntervalId);
-  timer.innerHTML = "<span>타이머</span>";
+  timer.innerHTML = "";
   setNotifs(
     "제시어 설명이 종료되었습니다. <br/>라이어로 의심되는 사람을 선택해주세요."
   );
 };
 
-export const handleVoteEnded = ({ nickname, color }) => {
+export const handleRevoteNotification = () => {
+  timer.innerHTML = "";
+  setNotifs("재투표를 진행합니다. <br/>라이어로 의심되는 사람을 선택해주세요.");
+};
+
+export const handleDuplicatedVote = () => {
   setNotifs(
-    `투표가 종료되었습니다, 라이어는 <span style="color:${color}">${nickname}</span>님이었습니다.<br/>라이어는 정답을 맞춰주세요.`
+    `투표가 종료되었습니다. <br/>최다득표자가 여러명이므로 5초 뒤 재투표를 진행합니다.`
   );
+  disableVote();
+  let time = DUPLICATED_TIME + 1;
+  duplicatedIntervalId = setInterval(() => {
+    time -= 1;
+    timer.innerText = time;
+
+    if (time === 0) {
+      timer.innerHTML = "";
+      clearInterval(duplicatedIntervalId);
+    }
+  }, 1000);
 };
 
 export const handleLiarWin = ({ answer }) => {
@@ -218,6 +274,7 @@ export const handleLiarWin = ({ answer }) => {
     `라이어가 정답을 맞춰 라이어가 승리했습니다.</br> 정답은 ${answer}였습니다.`
   );
 };
+
 export const handleLiarLose = ({ answer }) => {
   setNotifs(
     `라이어가 정답을 맞추지 못해 시민이 승리했습니다.</br> 정답은 ${answer}였습니다.`
@@ -228,10 +285,6 @@ export const handleVoteFailed = ({ nickname, color }) => {
   setNotifs(
     `투표가 종료되었습니다, 라이어는 <span style="color:${color}">${nickname}</span>님이었습니다.<br/>라이어를 찾지 못해 라이어가 승리합니다.`
   );
-};
-
-export const handleReadyNotif = ({ cur, total }) => {
-  setNotifs(`${cur} / ${total}`);
 };
 
 if (readyBtn) {

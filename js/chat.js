@@ -1,4 +1,4 @@
-import { hintIntervalId } from "./players.js";
+import { hintIntervalId, setNotifs } from "./players.js";
 import { getSocket } from "./sockets.js";
 
 const chatContainer = document.getElementById("jsChatContainer");
@@ -21,6 +21,7 @@ const appendMessage = (text, nickname, color) => {
 
 const appendHint = (text, nickname, color) => {
   const li = document.createElement("li");
+  li.classList.add("hintList");
   li.innerHTML = `
     <span style="color: ${color}">${nickname}:</span> ${text}
   `;
@@ -33,16 +34,16 @@ const appendVote = (nickname, targetNickname, color, targetColor) => {
   const li = document.createElement("li");
   li.innerHTML = `<span style="color: ${color}">${nickname}</span>님이 <span style="color: ${targetColor}">${targetNickname}</span>님을 라이어로 지목했습니다.`;
   hints.appendChild(li);
-  const position = hints.scrollHeight;
-  hints.scrollTop = position;
+  const position = hintContainer.scrollHeight;
+  hintContainer.scrollTop = position;
 };
 
 const appendCancelVote = (nickname, targetNickname, color, targetColor) => {
   const li = document.createElement("li");
   li.innerHTML = `<span style="color: ${color}">${nickname}</span>님이 <span style="color: ${targetColor}">${targetNickname}</span>님에 대한 지목을 취소했습니다.`;
   hints.appendChild(li);
-  const position = hints.scrollHeight;
-  hints.scrollTop = position;
+  const position = hintContainer.scrollHeight;
+  hintContainer.scrollTop = position;
 };
 
 const handleSendMessage = (event) => {
@@ -64,8 +65,12 @@ const handleSendHint = (event) => {
 
 export const autoSendHint = (value) => {
   clearInterval(hintIntervalId);
-  document.getElementById("jsTimer").innerHTML = "<span>타이머</span>";
+  document.getElementById("jsTimer").innerHTML = "";
   getSocket().emit(window.events.sendHint, { hint: value });
+  closeHintModal();
+};
+
+export const closeHintModal = () => {
   hintOverlay.style.display = "none";
 };
 
@@ -90,7 +95,31 @@ export const handleVoteStarted = () => {
   });
 };
 
-const votePlayer = (id) => {
+export const handleVoteEnded = ({ nickname, color, liarId }) => {
+  console.log("a");
+  setNotifs(
+    `투표가 종료되었습니다, 라이어는 <span style="color:${color}">${nickname}</span>님이었습니다.<br/>라이어는 정답을 맞춰주세요.`
+  );
+  disableVote();
+};
+
+export const disableVote = () => {
+  const voteCounters = document.querySelectorAll(".voteCounter");
+  const players = document.querySelectorAll(".player");
+  console.log(voteCounters);
+  voteCounters.forEach((element) => {
+    element.style.display = "none";
+  });
+  players.forEach((element) => {
+    element.classList.remove("voted");
+    element.classList.remove("selectable");
+
+    const elClone = element.cloneNode(true);
+    element.parentNode.replaceChild(elClone, element);
+  });
+};
+
+export const votePlayer = (id) => {
   return () => {
     getSocket().emit(window.events.sendVote, { target: id });
   };

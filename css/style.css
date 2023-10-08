@@ -1,7 +1,15 @@
 @font-face {
-  font-family: "TAEBAEKmilkyway";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/TAEBAEKmilkyway.woff2")
-    format("woff2");
+  font-family: "DOSGothic";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_eight@1.0/DOSGothic.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "dalmoori";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2102-01@1.0/dalmoori.woff")
+    format("woff");
   font-weight: normal;
   font-style: normal;
 }
@@ -14,9 +22,17 @@
   user-select: none;
 }
 
+body {
+  background-image: url("/img/bg.jpeg");
+  user-select: none;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
 html,
 body {
-  font-family: "TAEBAEKmilkyway";
+  font-family: "dalmoori";
   margin: 0;
   box-sizing: border-box;
   width: 100vw;
@@ -25,7 +41,7 @@ body {
 }
 
 input {
-  font-family: "TAEBAEKmilkyway";
+  font-family: "DOSGothic";
 }
 
 ul {
@@ -36,10 +52,12 @@ ul {
 
 li {
   margin-bottom: 1rem;
+  font-family: "DOSGothic";
 }
 
 li > span {
   font-weight: bold;
+  font-family: "dalmoori";
 }
 
 body > .loginContainer,
@@ -139,7 +157,6 @@ body.loggedOut > .loginContainer {
   height: 60rem;
   display: flex;
   flex-direction: row;
-  background-color: #eee;
 }
 
 .gameContainer {
@@ -158,10 +175,11 @@ body.loggedOut > .loginContainer {
 
 .card {
   height: 10rem;
-  width: 12rem;
+  width: 10rem;
   position: relative;
   padding: 0.1rem;
-  background-color: rgb(96 165 250);
+  background-color: #36454f;
+  color: #faf5ef;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -180,6 +198,7 @@ body.loggedOut > .loginContainer {
   flex-direction: column;
   transition: all 0.4s ease-in-out;
   font-size: 1rem;
+  word-break: break-all;
 }
 
 .cardContent.front {
@@ -187,6 +206,7 @@ body.loggedOut > .loginContainer {
 }
 .cardContent.back {
   opacity: 0;
+  font-family: "DOSGothic";
 }
 .card:hover > .front {
   opacity: 0;
@@ -200,8 +220,8 @@ body.loggedOut > .loginContainer {
   text-align: center;
 }
 
-.card span:first-child {
-  margin-bottom: 1rem;
+.card span:not(:first-child) {
+  margin-top: 1rem;
 }
 
 .card span.bold {
@@ -210,7 +230,7 @@ body.loggedOut > .loginContainer {
 
 .card span.liar {
   font-size: 1.5rem;
-  line-height: 3rem;
+  line-height: 2rem;
   color: red;
 }
 
@@ -219,7 +239,8 @@ body.loggedOut > .loginContainer {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: beige;
+  background-color: #0c0908;
+  color: #fbfcf8;
   border-radius: 5px;
   font-size: 2rem;
   line-height: 3rem;
@@ -233,11 +254,12 @@ body.loggedOut > .loginContainer {
   display: inline;
 }
 
-.timer {
+.additionalMessage {
   width: 10rem;
   width: 10rem;
   border-radius: 5px;
-  background-color: aqua;
+  background-color: #353839;
+  color: #fbfcf8;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -246,7 +268,7 @@ body.loggedOut > .loginContainer {
     drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
 }
 
-.timer > span {
+.additionalMessage > span {
   font-size: 1rem;
 }
 
@@ -268,7 +290,7 @@ body.loggedOut > .loginContainer {
   margin: 0.5rem;
   width: 12rem;
   height: 9rem;
-  border-radius: 10px;
+  border: 5px solid gray;
   filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07))
     drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
   display: flex;
@@ -299,6 +321,19 @@ body.loggedOut > .loginContainer {
   height: 1.2rem;
 }
 
+.player > .ready {
+  display: none;
+  width: 5rem;
+  height: 5rem;
+  position: absolute;
+  top: -3rem;
+  left: -1.5rem;
+}
+
+.player.ready > .ready {
+  display: block;
+}
+
 .selectable:hover {
   transform: scale(1.1);
   background-color: #ccc;
@@ -307,9 +342,10 @@ body.loggedOut > .loginContainer {
 
 .player h1 {
   font-size: 1.5rem;
+  margin-top: 0.1rem;
 }
 
-.svg {
+.svg#player {
   width: 5rem;
   height: 5rem;
   margin-top: 1rem;
@@ -324,13 +360,17 @@ body.loggedOut > .loginContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: #fbfcf8;
+}
+
+.answerWrapper {
+  margin: 1rem;
 }
 
 .answer {
   width: 30rem;
   height: 22rem;
-  margin: 1rem;
-  background-color: antiquewhite;
+  background-color: #0c0908;
   filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07))
     drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
 }
@@ -340,20 +380,29 @@ body.loggedOut > .loginContainer {
   margin-top: 1.5rem;
 }
 
-.answer li {
-  border: 1px solid rgba(0, 0, 0, 0.2);
+.answer li.hintList {
+  border: 2px solid gray;
   padding: 1rem;
   margin-bottom: 0.5rem;
+}
+
+.answer li {
+  border: none;
+  padding: 0.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.chatWrapper {
+  margin: 1rem;
+  margin-bottom: 2rem;
 }
 
 .chat {
   width: 30rem;
   height: 22rem;
-  margin: 1rem;
-  background-color: antiquewhite;
+  background-color: #0c0908;
   filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07))
     drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
-  margin-bottom: 2rem;
   padding-bottom: 2rem;
 }
 
@@ -367,12 +416,12 @@ body.loggedOut > .loginContainer {
 .chat_input {
   position: absolute;
   bottom: 3.2rem;
-  right: 1.5rem;
+  right: 1.2rem;
   width: 27rem;
   height: 3rem;
   font-size: 1.5rem;
   padding: 0rem 2rem;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: 5px solid gray;
   border-radius: 5px;
   filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07))
     drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
@@ -443,12 +492,72 @@ body.loggedOut > .loginContainer {
   z-index: 3;
   top: 50%;
   left: 50%;
-  width: 10rem;
-  height: 5rem;
-  border-radius: 1rem;
-  background-color: #fdfdfd;
+  width: 100%;
+  height: 100%;
+  background-color: #f5fefd;
   font-size: 1.5rem;
   transform: translate(-50%, -50%);
-  font-family: "TAEBAEKmilkyway";
+  font-family: "dalmoori";
   cursor: pointer;
+}
+
+.readyBtn.ready {
+  background-color: #fcfbfc;
+}
+
+.box {
+  position: relative;
+}
+.box__line {
+  position: absolute;
+  background: rgba(255, 255, 255, 1);
+}
+.box__line--top,
+.box__line--bottom {
+  height: 0.4rem;
+  width: 100%;
+}
+.box__line--top::before,
+.box__line--bottom::before,
+.box__line--top::after,
+.box__line--bottom::after {
+  content: "";
+  position: absolute;
+  width: 0.4rem;
+  height: 0.4rem;
+  background: rgba(255, 255, 255, 1);
+  z-index: 1;
+}
+.box__line--top {
+  top: -0.4rem;
+}
+.box__line--top::before {
+  left: 0;
+  bottom: -0.4rem;
+}
+.box__line--top::after {
+  right: 0;
+  bottom: -0.4rem;
+}
+.box__line--bottom {
+  bottom: -0.4rem;
+}
+.box__line--bottom::before {
+  left: 0;
+  top: -0.4rem;
+}
+.box__line--bottom::after {
+  right: 0;
+  top: -0.4rem;
+}
+.box__line--left,
+.box__line--right {
+  width: 0.4rem;
+  height: 100%;
+}
+.box__line--left {
+  left: -0.4rem;
+}
+.box__line--right {
+  right: -0.4rem;
 }

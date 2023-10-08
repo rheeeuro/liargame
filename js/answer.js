@@ -8,7 +8,7 @@ const handleAnswerFormSubmit = (e) => {
   const input = answerForm.querySelector("input");
   const { value } = input;
   input.value = "";
-  answerOverlay.style.display = "none";
+  closeAnswerModal();
   getSocket().emit(window.events.sendAnswer, { answer: value });
 };
 
@@ -16,6 +16,10 @@ export const handleRequestAnswer = ({ id }) => {
   if (getSocket().id === id) {
     answerOverlay.style.display = "flex";
   }
+};
+
+export const closeAnswerModal = () => {
+  answerOverlay.style.display = "none";
 };
 
 if (answerForm) {

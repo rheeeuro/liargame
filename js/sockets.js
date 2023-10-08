@@ -1,13 +1,14 @@
-import { handleRequestAnswer } from "./answer.js";
 import {
   handleNewCancelVote,
   handleNewHint,
   handleNewMessage,
   handleNewVote,
+  handleVoteEnded,
   handleVoteStarted,
 } from "./chat.js";
 import { handleDisconnected, handleNewUser } from "./notifications.js";
 import {
+  handleDuplicatedVote,
   handleGameEnded,
   handleGameStarted,
   handleHintTurn,
@@ -15,8 +16,7 @@ import {
   handleLiarWin,
   handlePlayerUpdate,
   handlePlayerVoteUpdate,
-  handleReadyNotif,
-  handleVoteEnded,
+  handleRevoteNotification,
   handleVoteFailed,
   handleVoteNotification,
 } from "./players.js";
@@ -36,15 +36,15 @@ export const initSockets = (newSocket) => {
   socket.on(events.voteStarted, handleVoteStarted);
   socket.on(events.voteEnded, handleVoteEnded);
   socket.on(events.voteNotification, handleVoteNotification);
+  socket.on(events.revoteNotification, handleRevoteNotification);
   socket.on(events.newVote, handleNewVote);
   socket.on(events.newCancelVote, handleNewCancelVote);
+  socket.on(events.duplicatedVote, handleDuplicatedVote);
   socket.on(events.voteFailed, handleVoteFailed);
-  socket.on(events.requestAnswer, handleRequestAnswer);
   socket.on(events.playerUpdate, handlePlayerUpdate);
   socket.on(events.playerVoteUpdate, handlePlayerVoteUpdate);
   socket.on(events.liarWin, handleLiarWin);
   socket.on(events.liarLose, handleLiarLose);
-  socket.on(events.readyNotif, handleReadyNotif);
   socket.on(events.gameStarted, handleGameStarted);
   socket.on(events.gameEnded, handleGameEnded);
 };
