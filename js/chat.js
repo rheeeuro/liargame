@@ -34,26 +34,26 @@ const appendHint = (text, nickname, color) => {
 const appendVote = (nickname, targetNickname, color, targetColor) => {
   const li = document.createElement("li");
   li.innerHTML = `<span style="color: ${color}">${nickname}</span>님이 <span style="color: ${targetColor}">${targetNickname}</span>님을 라이어로 지목했습니다.`;
-  hints.appendChild(li);
-  const position = hintContainer.scrollHeight;
-  hintContainer.scrollTop = position;
+  messages.appendChild(li);
+  const position = chatContainer.scrollHeight;
+  chatContainer.scrollTop = position;
 };
 
 const appendCancelVote = (nickname, targetNickname, color, targetColor) => {
   const li = document.createElement("li");
   li.innerHTML = `<span style="color: ${color}">${nickname}</span>님이 <span style="color: ${targetColor}">${targetNickname}</span>님에 대한 지목을 취소했습니다.`;
-  hints.appendChild(li);
-  const position = hintContainer.scrollHeight;
-  hintContainer.scrollTop = position;
+  messages.appendChild(li);
+  const position = chatContainer.scrollHeight;
+  chatContainer.scrollTop = position;
 };
 
 const handleSendMessage = (event) => {
   event.preventDefault();
   const input = sendMessage.querySelector("input");
   const { value } = input;
-  if (value === "") return;
-  getSocket().emit(window.events.sendMessage, { message: value });
   input.value = "";
+  if (value === "" || value.trim() === "") return;
+  getSocket().emit(window.events.sendMessage, { message: value });
 };
 
 const handleSendHint = (event) => {

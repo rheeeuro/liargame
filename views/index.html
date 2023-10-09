@@ -8,7 +8,7 @@
   </head>
   <body>
     <div class="loginContainer">
-      <div class="loginModal">
+      <div class="loginModal pixel">
         <form id="jsLogin">
           <input  
           type="text"
@@ -16,13 +16,14 @@
           id="nickname"
           placeholder="이름을 입력하세요."
           autocomplete="off"
+          maxlength="8"
           />
         </form>
       </div>
     </div>
     <div class="content">
       <div class="overlay" id="jsHintOverlay" style="display: none;">
-        <div class="modal">
+        <div class="modal pixel">
           <h1>20자 이내로<br/>제시어를 설명해주세요.</h1>
           <form id="jsSendHint">
             <input
@@ -31,12 +32,13 @@
             id="name"
             placeholder="제시어 설명..."
             autocomplete="off"
+            maxlength="20"
             />
           </form>
         </div>
       </div>
       <div class="overlay" id="jsAnswerOverlay" style="display: none;">
-        <div class="modal">
+        <div class="modal pixel">
           <h1>라이어로 지목되셨습니다. <br/><br/>제시어를 맞춰주세요.</h1>
           <form id="jsSendAnswer">
             <input
@@ -45,12 +47,13 @@
             id="name"
             placeholder="정답.."
             autocomplete="off"
+            maxlength="20"
             />
           </form>
         </div>
       </div>
       <div class="overlay" id="jsFinalOverlay" style="display: none;">
-        <div class="modal">
+        <div class="modal pixel">
           <h1>최종 선택해주세요.</h1>
           <h1>선택하시면 취소할 수 없습니다.</h1>
           <div class="finalModal">   
