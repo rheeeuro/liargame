@@ -72,6 +72,7 @@ const socketController = (socket, io) => {
           liarId: liar.id,
         });
       } else {
+        liar.point += 1;
         superBroadcast(events.voteFailed, {
           nickname: liar.nickname,
           color: liar.color,
@@ -140,8 +141,8 @@ const socketController = (socket, io) => {
       s.ready = false;
     });
     clearTimeout(timeout);
-    sendPlayerUpdate();
     superBroadcast(events.gameEnded);
+    sendPlayerUpdate();
   };
 
   socket.on(events.setNickname, ({ nickname }) => {
@@ -251,8 +252,12 @@ const socketController = (socket, io) => {
 
   socket.on(events.sendAnswer, ({ input }) => {
     if (input === word.word) {
+      liar.point += 1;
       superBroadcast(events.liarWin, { answer: word.word });
     } else {
+      sockets.forEach((s) => {
+        if (s.id !== liar.id) s.point += 1;
+      });
       superBroadcast(events.liarLose, {
         liarId: liar.id,
         input,
