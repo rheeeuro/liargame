@@ -17,7 +17,7 @@ const finalOverlay = document.getElementById("jsFinalOverlay");
 const finalPlayer = document.getElementById("jsFinalPlayer");
 const finalYes = document.getElementById("jsFinalYes");
 const finalNo = document.getElementById("jsFinalNo");
-const chatInput = document.getElementById("jsChatInput");
+export const chatInput = document.getElementById("jsChatInput");
 
 const WORD_TIME = 10;
 const HINT_TIME = 30;
@@ -315,6 +315,7 @@ export const handleLiarWin = ({ answer }) => {
     `라이어가 정답을 맞춰 라이어가 승리했습니다.</br> 정답은 '<span style="color: blue;">${answer}</span>'였습니다.`
   );
   resultTimer();
+  chatInput.style.display = "flex";
 };
 
 export const handleLiarLose = ({ liarId, input, answer }) => {
@@ -328,6 +329,7 @@ export const handleLiarLose = ({ liarId, input, answer }) => {
     );
   }
   resultTimer();
+  chatInput.style.display = "flex";
 };
 
 export const handleVoteFailed = ({ nickname, color }) => {

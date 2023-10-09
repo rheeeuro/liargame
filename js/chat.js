@@ -1,5 +1,5 @@
 import { handleRequestAnswer } from "./answer.js";
-import { hintIntervalId, setNotifs } from "./players.js";
+import { chatInput, hintIntervalId, setNotifs } from "./players.js";
 import { getSocket } from "./sockets.js";
 
 const chatContainer = document.getElementById("jsChatContainer");
@@ -96,6 +96,7 @@ export const handleVoteEnded = ({ nickname, color, liarId }) => {
     `투표가 종료되었습니다, 라이어는 <span style="color:${color}">${nickname}</span>님이었습니다.<br/>라이어는 정답을 맞춰주세요.`
   );
   disableVote();
+  chatInput.style.display = "none";
   handleRequestAnswer(liarId);
 };
 

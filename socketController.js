@@ -107,7 +107,7 @@ const socketController = (socket, io) => {
       liar = chooseLiar();
       word = chooseWord();
 
-      console.log(liar.nickname, word.word);
+      console.log(`라이어: ${liar.nickname}, 제시어: ${word.word}`);
 
       superBroadcast(events.gameStarted, { liar, word });
       hintOrder = sockets.map((s) => ({

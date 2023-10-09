@@ -615,6 +615,7 @@ body.loggedOut > .loginContainer {
   height: 2rem;
   font-size: 1rem;
   font-family: "dalmoori";
+  border: 3px solid black;
 }
 
 .tick {
