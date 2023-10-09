@@ -82,8 +82,8 @@ body.loggedOut > .loginContainer {
 }
 
 .loginModal {
-  width: 18rem;
-  height: 8rem;
+  width: 40rem;
+  height: 30rem;
   background-color: white;
   border-radius: 5px;
   position: absolute;

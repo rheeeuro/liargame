@@ -6,6 +6,7 @@ const events = {
   sendMessage: "sendMessage",
   newMessage: "newMessage",
   hintTurn: "hintTurn",
+  secondHintNotif: "secondHintNotif",
   sendHint: "sendHint",
   newHint: "newHint",
   voteStarted: "voteStarted",

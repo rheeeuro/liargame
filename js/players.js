@@ -17,18 +17,21 @@ const finalOverlay = document.getElementById("jsFinalOverlay");
 const finalPlayer = document.getElementById("jsFinalPlayer");
 const finalYes = document.getElementById("jsFinalYes");
 const finalNo = document.getElementById("jsFinalNo");
+const chatInput = document.getElementById("jsChatInput");
 
 const WORD_TIME = 10;
 const HINT_TIME = 30;
 const DUPLICATED_TIME = 5;
 const RESULT_TIME = 10;
 const FINAL_TIME = 30;
+const SECOND_HINT_TIME = 60;
 
 export let hintIntervalId = null;
 let wordIntervalId = null;
 let duplicatedIntervalId = null;
 let resultIntervalId = null;
 let finalAnounceIntervalId = null;
+let secondHintIntervalId = null;
 
 let inProgress = false;
 
@@ -38,6 +41,7 @@ export const clearAllInterval = () => {
   clearInterval(duplicatedIntervalId);
   clearInterval(resultIntervalId);
   clearInterval(finalAnounceIntervalId);
+  clearInterval(secondHintIntervalId);
 };
 
 const addPlayers = (players) => {
@@ -205,8 +209,28 @@ export const handleGameStarted = ({ liar, word }) => {
   }, 1000);
 };
 
+export const handleSecondHintNotif = () => {
+  clearInterval(hintIntervalId);
+  setNotifs(
+    "첫번째 제시어 설명이 모두 끝났습니다. <br/>두번째 설명 전, 60초간 자유롭게 대화해주세요."
+  );
+  chatInput.style.display = "flex";
+  let time = SECOND_HINT_TIME + 1;
+  secondHintIntervalId = setInterval(() => {
+    time -= 1;
+    updateTimer(time);
+
+    if (time === 0) {
+      timer.classList.remove("tick");
+      timer.innerHTML = "";
+      clearInterval(secondHintIntervalId);
+    }
+  }, 1000);
+};
+
 export const handleHintTurn = ({ id, nickname, color }) => {
   clearInterval(hintIntervalId);
+  chatInput.style.display = "none";
   setNotifs(
     `<span style="color:${color}">${nickname}</span>님의 차례입니다. <br/>30초 내에 제시어에 대한 설명을 작성해주세요.`
   );
@@ -235,6 +259,7 @@ export const handleGameEnded = () => {
   timer.classList.remove("tick");
   timer.innerHTML = "";
   finalPlayer.innerHTML = "";
+  chatInput.style.display = "flex";
   setNotifs(
     "게임이 종료되었습니다. <br/>다음 게임 시작을 위해 준비버튼을 눌러주세요."
   );
@@ -247,6 +272,7 @@ export const handleGameEnded = () => {
 
 export const handleVoteNotification = () => {
   clearInterval(hintIntervalId);
+  chatInput.style.display = "flex";
   timer.classList.remove("tick");
   timer.innerHTML = "";
   setNotifs(

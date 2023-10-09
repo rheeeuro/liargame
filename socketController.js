@@ -116,6 +116,9 @@ const socketController = (socket, io) => {
         color: s.color,
       }));
       hintOrder.sort(() => Math.random() - 0.5);
+      if (sockets.length < 10) {
+        hintOrder = [...hintOrder, ...hintOrder];
+      }
 
       timeout = setTimeout(() => {
         sendPlayerUpdate();
@@ -182,10 +185,19 @@ const socketController = (socket, io) => {
       color: socket.color,
     });
 
-    if (hintCount === sockets.length) {
+    if (hintCount === hintOrder.length) {
       superBroadcast(events.voteStarted);
       sendPlayerVoteUpdate();
       superBroadcast(events.voteNotification);
+    } else if (hintCount === sockets.length) {
+      superBroadcast(events.secondHintNotif);
+      timeout = setTimeout(() => {
+        superBroadcast(events.hintTurn, {
+          id: hintOrder[hintCount].id,
+          nickname: hintOrder[hintCount].nickname,
+          color: hintOrder[hintCount].color,
+        });
+      }, 61000);
     } else {
       superBroadcast(events.hintTurn, {
         id: hintOrder[hintCount].id,
@@ -196,7 +208,6 @@ const socketController = (socket, io) => {
   });
 
   socket.on(events.sendVote, ({ target }) => {
-    socket.voted = target;
     let voteCount = 0;
     let targetNickname = "";
     let targetColor = "#000000";
@@ -228,8 +239,6 @@ const socketController = (socket, io) => {
   });
 
   socket.on(events.cancelVote, ({ target }) => {
-    socket.voted = null;
-    voteCount -= 1;
     sockets.forEach((s) => {
       if (s.id === socket.id) {
         s.voted = null;
@@ -251,7 +260,7 @@ const socketController = (socket, io) => {
   });
 
   socket.on(events.sendAnswer, ({ input }) => {
-    if (input === word.word) {
+    if (input.trim() === word.word.trim()) {
       liar.point += 1;
       superBroadcast(events.liarWin, { answer: word.word });
     } else {
@@ -265,7 +274,7 @@ const socketController = (socket, io) => {
       });
     }
 
-    setTimeout(endGame, 11000);
+    timeout = setTimeout(endGame, 11000);
   });
 
   socket.on(events.readyGame, () => {
