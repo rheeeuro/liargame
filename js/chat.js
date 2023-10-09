@@ -1,3 +1,4 @@
+import { handleRequestAnswer } from "./answer.js";
 import { hintIntervalId, setNotifs } from "./players.js";
 import { getSocket } from "./sockets.js";
 
@@ -84,29 +85,23 @@ export const handleNewHint = ({ hint, nickname, color }) => {
 
 export const handleVoteStarted = () => {
   const voteCounters = document.querySelectorAll(".voteCounter");
-  const players = document.querySelectorAll(".player");
-  console.log(voteCounters);
   voteCounters.forEach((element) => {
     element.style.display = "flex";
   });
-  players.forEach((element) => {
-    element.classList.add("selectable");
-    element.addEventListener("click", votePlayer(element.id));
-  });
+  updateVoted();
 };
 
 export const handleVoteEnded = ({ nickname, color, liarId }) => {
-  console.log("a");
   setNotifs(
     `투표가 종료되었습니다, 라이어는 <span style="color:${color}">${nickname}</span>님이었습니다.<br/>라이어는 정답을 맞춰주세요.`
   );
   disableVote();
+  handleRequestAnswer(liarId);
 };
 
 export const disableVote = () => {
   const voteCounters = document.querySelectorAll(".voteCounter");
   const players = document.querySelectorAll(".player");
-  console.log(voteCounters);
   voteCounters.forEach((element) => {
     element.style.display = "none";
   });
@@ -114,34 +109,29 @@ export const disableVote = () => {
     element.classList.remove("voted");
     element.classList.remove("selectable");
 
-    const elClone = element.cloneNode(true);
-    element.parentNode.replaceChild(elClone, element);
+    element.removeEventListener("click", votePlayer);
+    element.removeEventListener("click", cancelVotePlayer);
   });
 };
 
-export const votePlayer = (id) => {
-  return () => {
-    getSocket().emit(window.events.sendVote, { target: id });
-  };
+export const votePlayer = (e) => {
+  getSocket().emit(window.events.sendVote, { target: e.currentTarget.id });
 };
 
-const cancelVotePlayer = (id) => {
-  return () => {
-    getSocket().emit(window.events.cancelVote, { target: id });
-  };
+const cancelVotePlayer = (e) => {
+  getSocket().emit(window.events.cancelVote, { target: e.currentTarget.id });
 };
 
-const updateVoted = () => {
+export const updateVoted = () => {
   const voted = document.querySelector(".voted");
   if (voted) {
-    voted.removeEventListener("click", votePlayer(voted.id));
-    voted.addEventListener("click", cancelVotePlayer(voted.id));
+    voted.removeEventListener("click", votePlayer);
+    voted.addEventListener("click", cancelVotePlayer);
   } else {
     const players = document.querySelectorAll(".player");
     players.forEach((element) => {
-      console.log(element);
-      element.removeEventListener("click", cancelVotePlayer(element.id));
-      element.addEventListener("click", votePlayer(element.id));
+      element.removeEventListener("click", cancelVotePlayer);
+      element.addEventListener("click", votePlayer);
     });
   }
 };

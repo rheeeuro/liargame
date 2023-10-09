@@ -8,10 +8,12 @@ import {
 } from "./chat.js";
 import { handleDisconnected, handleNewUser } from "./notifications.js";
 import {
-  handleDuplicatedVote,
+  handleFinalAnounce,
+  handleFinalNotif,
   handleGameEnded,
   handleGameStarted,
   handleHintTurn,
+  handleInvalidVote,
   handleLiarLose,
   handleLiarWin,
   handlePlayerUpdate,
@@ -37,9 +39,11 @@ export const initSockets = (newSocket) => {
   socket.on(events.voteEnded, handleVoteEnded);
   socket.on(events.voteNotification, handleVoteNotification);
   socket.on(events.revoteNotification, handleRevoteNotification);
+  socket.on(events.finalAnounce, handleFinalAnounce);
+  socket.on(events.finalNotif, handleFinalNotif);
   socket.on(events.newVote, handleNewVote);
   socket.on(events.newCancelVote, handleNewCancelVote);
-  socket.on(events.duplicatedVote, handleDuplicatedVote);
+  socket.on(events.invalidVote, handleInvalidVote);
   socket.on(events.voteFailed, handleVoteFailed);
   socket.on(events.playerUpdate, handlePlayerUpdate);
   socket.on(events.playerVoteUpdate, handlePlayerVoteUpdate);

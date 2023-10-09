@@ -49,6 +49,20 @@
           </form>
         </div>
       </div>
+      <div class="overlay" id="jsFinalOverlay" style="display: none;">
+        <div class="modal">
+          <h1>최종 선택해주세요.</h1>
+          <h1>선택하시면 취소할 수 없습니다.</h1>
+          <div class="finalModal">   
+            <div class="finalPlayer" id="jsFinalPlayer">
+            </div>
+            <div class="buttonContainer">
+              <button id="jsFinalYes">라이어</button>
+              <button id="jsFinalNo">시민</button>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="gameContainer">
         <div class="gameTitle">
           <div class="card box" id="jsCard">
@@ -74,7 +88,7 @@
             <div class="box__line box__line--right"></div>
             <div class="box__line box__line--bottom"></div>
             <div class="box__line box__line--left"></div>
-            <div id="jsTimer"></div>
+            <div class="timer" id="jsTimer"></div>
           </div>
         </div>
         <div class="gameBoardContainer">

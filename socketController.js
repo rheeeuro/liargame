@@ -7,6 +7,8 @@ let inProgress = false;
 let word = null;
 let liar = null;
 let hintCount = 0;
+let voted = null;
+let finalVote = null;
 
 let timeout = null;
 
@@ -44,18 +46,26 @@ const socketController = (socket, io) => {
     });
 
     if (sockets.filter((s) => s.voteCount === max.voteCount).length > 1) {
-      superBroadcast(events.duplicatedVote);
+      superBroadcast(events.invalidVote, { duplicated: true });
       sockets.forEach((s) => {
         s.voted = null;
         s.voteCount = 0;
       });
-      setTimeout(() => {
+      timeout = setTimeout(() => {
+        sendPlayerVoteUpdate();
         superBroadcast(events.voteStarted);
         superBroadcast(events.revoteNotification);
-        sendPlayerVoteUpdate();
       }, 5000);
     } else {
-      if (max.id === liar.id) {
+      voted = max;
+      finalVote = { yes: [], no: [] };
+      superBroadcast(events.finalAnounce, { voted });
+    }
+  };
+
+  const handleFinalVoteEnded = () => {
+    if (finalVote.yes.length > finalVote.no.length) {
+      if (voted.id === liar.id) {
         superBroadcast(events.voteEnded, {
           nickname: liar.nickname,
           color: liar.color,
@@ -66,8 +76,23 @@ const socketController = (socket, io) => {
           nickname: liar.nickname,
           color: liar.color,
         });
-        endGame();
+        timeout = setTimeout(() => {
+          endGame();
+        }, 11000);
       }
+    } else {
+      voted = null;
+      finalVote = null;
+      superBroadcast(events.invalidVote, { duplicated: false });
+      sockets.forEach((s) => {
+        s.voted = null;
+        s.voteCount = 0;
+      });
+      timeout = setTimeout(() => {
+        sendPlayerVoteUpdate();
+        superBroadcast(events.voteStarted);
+        superBroadcast(events.revoteNotification);
+      }, 5000);
     }
   };
 
@@ -106,7 +131,9 @@ const socketController = (socket, io) => {
     inProgress = false;
     liar = null;
     word = null;
+    voted = null;
     hintCount = 0;
+    finalVote = null;
     sockets.forEach((s) => {
       s.voteCount = 0;
       s.voted = null;
@@ -126,6 +153,7 @@ const socketController = (socket, io) => {
       color: "#000000",
       voted: null,
       ready: false,
+      point: 0,
     });
     endGame();
     broadcast(events.newUser, { nickname });
@@ -155,6 +183,7 @@ const socketController = (socket, io) => {
 
     if (hintCount === sockets.length) {
       superBroadcast(events.voteStarted);
+      sendPlayerVoteUpdate();
       superBroadcast(events.voteNotification);
     } else {
       superBroadcast(events.hintTurn, {
@@ -220,14 +249,18 @@ const socketController = (socket, io) => {
     });
   });
 
-  socket.on(events.sendAnswer, ({ answer }) => {
-    if (answer === word.word) {
+  socket.on(events.sendAnswer, ({ input }) => {
+    if (input === word.word) {
       superBroadcast(events.liarWin, { answer: word.word });
     } else {
-      superBroadcast(events.liarLose, { answer: word.word });
+      superBroadcast(events.liarLose, {
+        liarId: liar.id,
+        input,
+        answer: word.word,
+      });
     }
 
-    endGame();
+    setTimeout(endGame, 11000);
   });
 
   socket.on(events.readyGame, () => {
@@ -249,6 +282,36 @@ const socketController = (socket, io) => {
       if (s.id === socket.id) s.ready = false;
     });
     sendPlayerUpdate();
+  });
+
+  socket.on(events.finalYes, () => {
+    finalVote.yes.push(socket.id);
+
+    if (finalVote.yes.length + finalVote.no.length === sockets.length) {
+      handleFinalVoteEnded();
+    } else {
+      superBroadcast(events.finalNotif, {
+        yes: finalVote.yes.length,
+        no: finalVote.no.length,
+        total: sockets.length,
+        voted,
+      });
+    }
+  });
+
+  socket.on(events.finalNo, () => {
+    finalVote.no.push(socket.id);
+
+    if (finalVote.yes.length + finalVote.no.length === sockets.length) {
+      handleFinalVoteEnded();
+    } else {
+      superBroadcast(events.finalNotif, {
+        yes: finalVote.yes.length,
+        no: finalVote.no.length,
+        total: sockets.length,
+        voted,
+      });
+    }
   });
 };
 

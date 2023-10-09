@@ -9,13 +9,13 @@ const fireNotification = (text, color) => {
 export const handleNewUser = ({ nickname }) => {
   fireNotification(
     `<strong>${nickname}</strong>님이 입장하셨습니다.`,
-    "rgb(0, 122, 255)"
+    "#29465b"
   );
 };
 
 export const handleDisconnected = ({ nickname }) => {
   fireNotification(
     `<strong>${nickname}</strong>님이 퇴장하셨습니다.`,
-    "rgb(255, 149, 0)"
+    "#8d4004"
   );
 };

@@ -9,10 +9,10 @@ const handleAnswerFormSubmit = (e) => {
   const { value } = input;
   input.value = "";
   closeAnswerModal();
-  getSocket().emit(window.events.sendAnswer, { answer: value });
+  getSocket().emit(window.events.sendAnswer, { input: value });
 };
 
-export const handleRequestAnswer = ({ id }) => {
+export const handleRequestAnswer = (id) => {
   if (getSocket().id === id) {
     answerOverlay.style.display = "flex";
   }
