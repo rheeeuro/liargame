@@ -55,6 +55,16 @@ li {
   font-family: "DOSGothic";
 }
 
+a:link {
+  text-decoration: none;
+}
+a:visited {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
 li > span {
   font-weight: bold;
   font-family: "dalmoori";
@@ -74,17 +84,29 @@ body.loggedOut > .loginContainer {
 }
 
 .loginContainer {
-  background-color: aliceblue;
+  background-image: url("/img/loginbg.jpeg");
+  user-select: none;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   position: absolute;
   width: 100vw;
   height: 100vh;
   z-index: 2;
 }
 
+.loginContainer a {
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration-line: none;
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+}
+
 .loginModal {
-  width: 40rem;
+  width: 44rem;
   height: 30rem;
-  background-color: white;
+  background-color: #fbfcf8;
   border-radius: 5px;
   position: absolute;
   top: 50%;
@@ -98,9 +120,31 @@ body.loggedOut > .loginContainer {
     drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
 }
 
+.loginModal .title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 25rem;
+  height: 5rem;
+}
+
+.title svg {
+  width: 5rem;
+  height: 5rem;
+}
+
+.title div {
+  font-size: 3.3rem;
+  width: 20rem;
+  height: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .loginModal input {
   font-family: "dalmoori";
-  width: 12rem;
+  width: 14rem;
   height: 1rem;
   font-size: 1.2rem;
   padding: 0.6rem;
