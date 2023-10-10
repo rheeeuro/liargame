@@ -372,6 +372,7 @@ export const handleFinalAnounce = ({ voted }) => {
   setNotifs(
     `<span style="color:${voted.color}">${voted.nickname}</span>님이 라이어로 지목되셨습니다. <br/>30초간 최후의 변론을 해주세요.`
   );
+  disableVote();
   let time = FINAL_TIME + 1;
   finalAnounceIntervalId = setInterval(() => {
     time -= 1;
