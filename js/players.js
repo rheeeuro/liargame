@@ -321,11 +321,11 @@ export const handleLiarWin = ({ answer }) => {
 export const handleLiarLose = ({ liarId, input, answer }) => {
 	if (getSocket().id === liarId) {
 		setNotifs(
-			`라이어가 정답을 맞추지 못해 시민이 승리했습니다.</br> 정답은 '<span style="color: blue;">${answer}</span>'였습니다. <br/>`
+			`라이어가 정답을 맞추지 못해 시민이 승리했습니다.</br> 정답은 '<span style="color: blue;">${answer}</span>'였습니다.`
 		);
 	} else {
 		setNotifs(
-			`라이어가 정답을 맞추지 못해 시민이 승리했습니다.</br> 라이어의 오답은 '<span style="color: blue;">${input}</span>'였습니다. <br/>`
+			`라이어가 정답을 맞추지 못해 시민이 승리했습니다.</br> 라이어의 오답은 '<span style="color: blue;">${input}</span>'였습니다.`
 		);
 	}
 	resultTimer();
@@ -335,7 +335,7 @@ export const handleLiarLose = ({ liarId, input, answer }) => {
 export const handleVoteFailed = ({ liarId, nickname, color, answer }) => {
 	if (getSocket().id === liarId) {
 		setNotifs(
-			`투표가 종료되었습니다, 라이어는 <span style="color:${color}">${nickname}</span>님이었습니다.<br/> 정답은 '<span style="color: blue;">${answer}</span>'였습니다. <br/>`
+			`투표가 종료되었습니다, 라이어는 <span style="color:${color}">${nickname}</span>님이었습니다.<br/> 정답은 '<span style="color: blue;">${answer}</span>'였습니다.`
 		);
 	} else {
 		setNotifs(
