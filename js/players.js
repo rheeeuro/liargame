@@ -1,9 +1,9 @@
 import { closeAnswerModal } from "./answer.js";
 import {
-  autoSendHint,
-  closeHintModal,
-  disableVote,
-  updateVoted,
+	autoSendHint,
+	closeHintModal,
+	disableVote,
+	updateVoted,
 } from "./chat.js";
 import { getSocket } from "./sockets.js";
 
@@ -36,36 +36,36 @@ let secondHintIntervalId = null;
 let inProgress = false;
 
 export const clearAllInterval = () => {
-  clearInterval(hintIntervalId);
-  clearInterval(wordIntervalId);
-  clearInterval(duplicatedIntervalId);
-  clearInterval(resultIntervalId);
-  clearInterval(finalAnounceIntervalId);
-  clearInterval(secondHintIntervalId);
+	clearInterval(hintIntervalId);
+	clearInterval(wordIntervalId);
+	clearInterval(duplicatedIntervalId);
+	clearInterval(resultIntervalId);
+	clearInterval(finalAnounceIntervalId);
+	clearInterval(secondHintIntervalId);
 };
 
 const addPlayers = (players) => {
-  if (!inProgress) {
-    if (players.length >= 3) {
-      readyBtn.style.display = "block";
-    } else {
-      readyBtn.style.display = "none";
-    }
-  }
+	if (!inProgress) {
+		if (players.length >= 3) {
+			readyBtn.style.display = "block";
+		} else {
+			readyBtn.style.display = "none";
+		}
+	}
 
-  board.innerHTML = "";
-  players.forEach((player) => {
-    const playerElement = document.createElement("div");
-    playerElement.id = player.id;
-    playerElement.classList.add("player");
-    if (player.ready && inProgress === false) {
-      playerElement.classList.add("ready");
-    }
-    playerElement.innerHTML = `
+	board.innerHTML = "";
+	players.forEach((player) => {
+		const playerElement = document.createElement("div");
+		playerElement.id = player.id;
+		playerElement.classList.add("player");
+		if (player.ready && inProgress === false) {
+			playerElement.classList.add("ready");
+		}
+		playerElement.innerHTML = `
     ${
-      inProgress
-        ? ""
-        : `
+			inProgress
+				? ""
+				: `
       <div class="point">
         <svg fill="#000000" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg" id="memory-diamond">
           <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -86,10 +86,10 @@ const addPlayers = (players) => {
         </svg>
       </div>
       `
-    }
+		}
     <svg fill="${
-      player.color
-    }" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg" class="user">
+			player.color
+		}" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg" class="user">
       <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
       <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
       <g id="SVGRepo_iconCarrier">
@@ -98,24 +98,24 @@ const addPlayers = (players) => {
     </svg>
     <h1>${player.nickname}</h1>
     `;
-    board.appendChild(playerElement);
-  });
+		board.appendChild(playerElement);
+	});
 };
 
 const addVotePlayers = (players) => {
-  const voted = players.filter((p) => p.id === getSocket().id)[0].voted;
-  board.innerHTML = "";
-  console.log(voted);
-  players.forEach((player) => {
-    const playerElement = document.createElement("div");
-    playerElement.id = player.id;
-    playerElement.classList.add("selectable");
-    playerElement.classList.add("player");
+	const voted = players.filter((p) => p.id === getSocket().id)[0].voted;
+	board.innerHTML = "";
+	console.log(voted);
+	players.forEach((player) => {
+		const playerElement = document.createElement("div");
+		playerElement.id = player.id;
+		playerElement.classList.add("selectable");
+		playerElement.classList.add("player");
 
-    if (player.id === voted) {
-      playerElement.classList.add("voted");
-    }
-    playerElement.innerHTML = `
+		if (player.id === voted) {
+			playerElement.classList.add("voted");
+		}
+		playerElement.innerHTML = `
     <div class="voteCounter">
       <svg fill="#000000" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg" class="memory-skull">
         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -135,228 +135,235 @@ const addVotePlayers = (players) => {
     </svg>
     <h1>${player.nickname}</h1>
     `;
-    board.appendChild(playerElement);
-  });
+		board.appendChild(playerElement);
+	});
 };
 
 export const setNotifs = (text) => {
-  notifs.innerHTML = "";
-  notifs.innerHTML = `<div>${text}</div>`;
+	notifs.innerHTML = "";
+	notifs.innerHTML = `<div>${text}</div>`;
 };
 
 const setCard = (liar, word) => {
-  cardCategory.innerHTML = `
+	cardCategory.innerHTML = `
     <span>카테고리</span>
     <span class="bold">${word.category}</span>
   `;
-  cardWord.innerHTML =
-    getSocket().id === liar.id
-      ? `<span class="liar">당신은<br/>라이어<br/>입니다</span>`
-      : `<span>제시어</span><span class="bold">${word.word}</span>`;
+	cardWord.innerHTML =
+		getSocket().id === liar.id
+			? `<span class="liar">당신은<br/>라이어<br/>입니다</span>`
+			: `<span>제시어</span><span class="bold">${word.word}</span>`;
 };
 
 const requestHint = () => {
-  document.getElementById("jsHintOverlay").style.display = "flex";
+	document.getElementById("jsHintOverlay").style.display = "flex";
 };
 
 export const handlePlayerUpdate = ({ sockets }) => {
-  let ready = false;
-  sockets.forEach((s) => {
-    if (s.id === getSocket().id) ready = s.ready;
-  });
+	let ready = false;
+	sockets.forEach((s) => {
+		if (s.id === getSocket().id) ready = s.ready;
+	});
 
-  if (ready) {
-    readyBtn.innerText = "준비 완료";
-    readyBtn.classList.add("ready");
-  } else {
-    readyBtn.innerText = "준비";
-    readyBtn.classList.remove("ready");
-  }
+	if (ready) {
+		readyBtn.innerText = "준비 완료";
+		readyBtn.classList.add("ready");
+	} else {
+		readyBtn.innerText = "준비";
+		readyBtn.classList.remove("ready");
+	}
 
-  if (inProgress) {
-    readyBtn.style.display = "none";
-  } else {
-    readyBtn.style.display = "flex";
-  }
+	if (inProgress) {
+		readyBtn.style.display = "none";
+	} else {
+		readyBtn.style.display = "flex";
+	}
 
-  addPlayers(sockets);
-  getSocket().emit(window.events.requestUpdateColor);
+	addPlayers(sockets);
+	getSocket().emit(window.events.requestUpdateColor);
 };
 
 export const handlePlayerVoteUpdate = ({ sockets }) => {
-  addVotePlayers(sockets);
-  updateVoted();
+	addVotePlayers(sockets);
+	updateVoted();
 };
 
 export const handleGameStarted = ({ liar, word }) => {
-  readyBtn.style.display = "none";
-  inProgress = true;
-  setNotifs(
-    "라이어가 선정되었습니다. <br/>좌측에 마우스를 올려 제시어를 확인해주세요."
-  );
-  setCard(liar, word);
+	readyBtn.style.display = "none";
+	inProgress = true;
+	setNotifs(
+		"라이어가 선정되었습니다. <br/>좌측에 마우스를 올려 제시어를 확인해주세요."
+	);
+	setCard(liar, word);
 
-  let time = WORD_TIME + 1;
-  wordIntervalId = setInterval(() => {
-    time -= 1;
-    updateTimer(time);
+	let time = WORD_TIME + 1;
+	wordIntervalId = setInterval(() => {
+		time -= 1;
+		updateTimer(time);
 
-    if (time === 0) {
-      timer.classList.remove("tick");
-      timer.innerHTML = "";
-      clearInterval(wordIntervalId);
-    }
-  }, 1000);
+		if (time === 0) {
+			timer.classList.remove("tick");
+			timer.innerHTML = "";
+			clearInterval(wordIntervalId);
+		}
+	}, 1000);
 };
 
 export const handleSecondHintNotif = () => {
-  clearInterval(hintIntervalId);
-  setNotifs(
-    "첫번째 제시어 설명이 모두 끝났습니다. <br/>두번째 설명 전, 60초간 자유롭게 대화해주세요."
-  );
-  chatInput.style.display = "flex";
-  let time = SECOND_HINT_TIME + 1;
-  secondHintIntervalId = setInterval(() => {
-    time -= 1;
-    updateTimer(time);
+	clearInterval(hintIntervalId);
+	setNotifs(
+		"첫번째 제시어 설명이 모두 끝났습니다. <br/>두번째 설명 전, 60초간 자유롭게 대화해주세요."
+	);
+	chatInput.style.display = "flex";
+	let time = SECOND_HINT_TIME + 1;
+	secondHintIntervalId = setInterval(() => {
+		time -= 1;
+		updateTimer(time);
 
-    if (time === 0) {
-      timer.classList.remove("tick");
-      timer.innerHTML = "";
-      clearInterval(secondHintIntervalId);
-    }
-  }, 1000);
+		if (time === 0) {
+			timer.classList.remove("tick");
+			timer.innerHTML = "";
+			clearInterval(secondHintIntervalId);
+		}
+	}, 1000);
 };
 
 export const handleHintTurn = ({ id, nickname, color }) => {
-  clearInterval(hintIntervalId);
-  chatInput.style.display = "none";
-  setNotifs(
-    `<span style="color:${color}">${nickname}</span>님의 차례입니다. <br/>30초 내에 제시어에 대한 설명을 작성해주세요.`
-  );
+	clearInterval(hintIntervalId);
+	chatInput.style.display = "none";
+	setNotifs(
+		`<span style="color:${color}">${nickname}</span>님의 차례입니다. <br/>30초 내에 제시어에 대한 설명을 작성해주세요.`
+	);
 
-  if (getSocket().id === id) {
-    requestHint();
-  }
+	if (getSocket().id === id) {
+		requestHint();
+	}
 
-  let time = HINT_TIME + 1;
-  hintIntervalId = setInterval(() => {
-    time -= 1;
-    updateTimer(time);
+	let time = HINT_TIME + 1;
+	hintIntervalId = setInterval(() => {
+		time -= 1;
+		updateTimer(time);
 
-    if (time === 0 && getSocket().id === id) {
-      autoSendHint("시간 초과");
-    }
-  }, 1000);
+		if (time === 0 && getSocket().id === id) {
+			autoSendHint("시간 초과");
+		}
+	}, 1000);
 };
 
 export const handleGameEnded = () => {
-  inProgress = false;
-  clearAllInterval();
-  closeAnswerModal();
-  closeHintModal();
+	inProgress = false;
+	clearAllInterval();
+	closeAnswerModal();
+	closeHintModal();
 
-  timer.classList.remove("tick");
-  timer.innerHTML = "";
-  finalPlayer.innerHTML = "";
-  chatInput.style.display = "flex";
-  setNotifs(
-    "게임이 종료되었습니다. <br/>다음 게임 시작을 위해 준비버튼을 눌러주세요."
-  );
-  cardCategory.innerHTML = "카테고리";
-  cardWord.innerHTML = "제시어";
-  document.getElementById("jsHints").innerHTML = "";
-  readyBtn.style.display = "block";
-  finalOverlay.style.display = "none";
+	timer.classList.remove("tick");
+	timer.innerHTML = "";
+	finalPlayer.innerHTML = "";
+	chatInput.style.display = "flex";
+	setNotifs(
+		"게임이 종료되었습니다. <br/>다음 게임 시작을 위해 준비버튼을 눌러주세요."
+	);
+	cardCategory.innerHTML = "카테고리";
+	cardWord.innerHTML = "제시어";
+	document.getElementById("jsHints").innerHTML = "";
+	readyBtn.style.display = "block";
+	finalOverlay.style.display = "none";
 };
 
 export const handleVoteNotification = () => {
-  clearInterval(hintIntervalId);
-  chatInput.style.display = "flex";
-  timer.classList.remove("tick");
-  timer.innerHTML = "";
-  setNotifs(
-    "제시어 설명이 종료되었습니다. <br/>라이어로 의심되는 사람을 선택해주세요."
-  );
+	clearInterval(hintIntervalId);
+	chatInput.style.display = "flex";
+	timer.classList.remove("tick");
+	timer.innerHTML = "";
+	setNotifs(
+		"제시어 설명이 종료되었습니다. <br/>라이어로 의심되는 사람을 선택해주세요."
+	);
 };
 
 export const handleRevoteNotification = () => {
-  timer.classList.remove("tick");
-  timer.innerHTML = "";
-  setNotifs("재투표를 진행합니다. <br/>라이어로 의심되는 사람을 선택해주세요.");
+	timer.classList.remove("tick");
+	timer.innerHTML = "";
+	setNotifs("재투표를 진행합니다. <br/>라이어로 의심되는 사람을 선택해주세요.");
 };
 
 export const handleInvalidVote = ({ duplicated }) => {
-  if (duplicated) {
-    setNotifs(
-      `투표가 종료되었습니다. <br/>최다득표자가 여러명이므로 5초 뒤 재투표를 진행합니다.`
-    );
-  } else {
-    setNotifs(
-      `투표가 종료되었습니다. <br/>과반수를 넘지 못하여 5초 뒤 재투표를 진행합니다.`
-    );
-  }
-  disableVote();
-  let time = DUPLICATED_TIME + 1;
-  duplicatedIntervalId = setInterval(() => {
-    time -= 1;
-    updateTimer(time);
+	if (duplicated) {
+		setNotifs(
+			`투표가 종료되었습니다. <br/>최다득표자가 여러명이므로 5초 뒤 재투표를 진행합니다.`
+		);
+	} else {
+		setNotifs(
+			`투표가 종료되었습니다. <br/>과반수를 넘지 못하여 5초 뒤 재투표를 진행합니다.`
+		);
+	}
+	disableVote();
+	let time = DUPLICATED_TIME + 1;
+	duplicatedIntervalId = setInterval(() => {
+		time -= 1;
+		updateTimer(time);
 
-    if (time === 0) {
-      timer.classList.remove("tick");
-      timer.innerHTML = "";
-      clearInterval(duplicatedIntervalId);
-    }
-  }, 1000);
+		if (time === 0) {
+			timer.classList.remove("tick");
+			timer.innerHTML = "";
+			clearInterval(duplicatedIntervalId);
+		}
+	}, 1000);
 };
 
 export const handleLiarWin = ({ answer }) => {
-  setNotifs(
-    `라이어가 정답을 맞춰 라이어가 승리했습니다.</br> 정답은 '<span style="color: blue;">${answer}</span>'였습니다.`
-  );
-  resultTimer();
-  chatInput.style.display = "flex";
+	setNotifs(
+		`라이어가 정답을 맞춰 라이어가 승리했습니다.</br> 정답은 '<span style="color: blue;">${answer}</span>'였습니다.`
+	);
+	resultTimer();
+	chatInput.style.display = "flex";
 };
 
 export const handleLiarLose = ({ liarId, input, answer }) => {
-  if (getSocket().id === liarId) {
-    setNotifs(
-      `라이어가 정답을 맞추지 못해 시민이 승리했습니다.</br> 정답은 '<span style="color: blue;">${answer}</span>'였습니다. <br/>`
-    );
-  } else {
-    setNotifs(
-      `라이어가 정답을 맞추지 못해 시민이 승리했습니다.</br> 라이어의 오답은 '<span style="color: blue;">${input}</span>'였습니다. <br/>`
-    );
-  }
-  resultTimer();
-  chatInput.style.display = "flex";
+	if (getSocket().id === liarId) {
+		setNotifs(
+			`라이어가 정답을 맞추지 못해 시민이 승리했습니다.</br> 정답은 '<span style="color: blue;">${answer}</span>'였습니다. <br/>`
+		);
+	} else {
+		setNotifs(
+			`라이어가 정답을 맞추지 못해 시민이 승리했습니다.</br> 라이어의 오답은 '<span style="color: blue;">${input}</span>'였습니다. <br/>`
+		);
+	}
+	resultTimer();
+	chatInput.style.display = "flex";
 };
 
-export const handleVoteFailed = ({ nickname, color }) => {
-  setNotifs(
-    `투표가 종료되었습니다, 라이어는 <span style="color:${color}">${nickname}</span>님이었습니다.<br/>라이어를 찾지 못해 라이어가 승리합니다.`
-  );
-  resultTimer();
+export const handleVoteFailed = ({ liarId, nickname, color, answer }) => {
+	if (getSocket().id === liarId) {
+		setNotifs(
+			`투표가 종료되었습니다, 라이어는 <span style="color:${color}">${nickname}</span>님이었습니다.<br/> 정답은 '<span style="color: blue;">${answer}</span>'였습니다. <br/>`
+		);
+	} else {
+		setNotifs(
+			`투표가 종료되었습니다, 라이어는 <span style="color:${color}">${nickname}</span>님이었습니다.<br/>라이어를 찾지 못해 라이어가 승리합니다.`
+		);
+	}
+
+	resultTimer();
 };
 
 const resultTimer = () => {
-  let time = RESULT_TIME + 1;
-  resultIntervalId = setInterval(() => {
-    time -= 1;
-    updateTimer(time);
+	let time = RESULT_TIME + 1;
+	resultIntervalId = setInterval(() => {
+		time -= 1;
+		updateTimer(time);
 
-    if (time === 0) {
-      timer.classList.remove("tick");
-      timer.innerText = "";
-    }
-  }, 1000);
+		if (time === 0) {
+			timer.classList.remove("tick");
+			timer.innerText = "";
+		}
+	}, 1000);
 };
 
 const updateTimer = (text) => {
-  if (!timer.classList.contains("tick")) {
-    timer.classList.add("tick");
-  }
-  timer.innerHTML = `
+	if (!timer.classList.contains("tick")) {
+		timer.classList.add("tick");
+	}
+	timer.innerHTML = `
   <svg fill="#000000" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg" id="memory-clock">
     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
     <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -369,26 +376,26 @@ const updateTimer = (text) => {
 };
 
 export const handleFinalAnounce = ({ voted }) => {
-  setNotifs(
-    `<span style="color:${voted.color}">${voted.nickname}</span>님이 라이어로 지목되셨습니다. <br/>30초간 최후의 변론을 해주세요.`
-  );
-  disableVote();
-  let time = FINAL_TIME + 1;
-  finalAnounceIntervalId = setInterval(() => {
-    time -= 1;
-    updateTimer(time);
+	setNotifs(
+		`<span style="color:${voted.color}">${voted.nickname}</span>님이 라이어로 지목되셨습니다. <br/>30초간 최후의 변론을 해주세요.`
+	);
+	disableVote();
+	let time = FINAL_TIME + 1;
+	finalAnounceIntervalId = setInterval(() => {
+		time -= 1;
+		updateTimer(time);
 
-    if (time === 0) {
-      clearInterval(finalAnounceIntervalId);
-      timer.classList.remove("tick");
-      timer.innerText = "";
-      requestFinalVote(voted);
-    }
-  }, 1000);
+		if (time === 0) {
+			clearInterval(finalAnounceIntervalId);
+			timer.classList.remove("tick");
+			timer.innerText = "";
+			requestFinalVote(voted);
+		}
+	}, 1000);
 };
 
 const requestFinalVote = (voted) => {
-  finalPlayer.innerHTML = `
+	finalPlayer.innerHTML = `
     <svg fill="${voted.color}" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg" class="user">
       <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
       <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -398,39 +405,39 @@ const requestFinalVote = (voted) => {
     </svg>
     <h1>${voted.nickname}</h1>
   `;
-  finalOverlay.style.display = "flex";
+	finalOverlay.style.display = "flex";
 };
 
 export const handleFinalNotif = ({ yes, no, total, voted }) => {
-  setNotifs(
-    `<span style="color:${voted.color}">${voted.nickname}</span>님에 대한 최종투표 진행중입니다.<br/>
+	setNotifs(
+		`<span style="color:${voted.color}">${voted.nickname}</span>님에 대한 최종투표 진행중입니다.<br/>
     찬성: ${yes} / 반대: ${no} (전체: ${total})`
-  );
+	);
 };
 
 if (readyBtn) {
-  readyBtn.addEventListener("click", () => {
-    if (readyBtn.classList.contains("ready")) {
-      readyBtn.innerText = "준비";
-      readyBtn.classList.remove("ready");
-      getSocket().emit(window.events.cancelReadyGame);
-    } else {
-      readyBtn.innerText = "준비 완료";
-      readyBtn.classList.add("ready");
-      getSocket().emit(window.events.readyGame);
-    }
-  });
+	readyBtn.addEventListener("click", () => {
+		if (readyBtn.classList.contains("ready")) {
+			readyBtn.innerText = "준비";
+			readyBtn.classList.remove("ready");
+			getSocket().emit(window.events.cancelReadyGame);
+		} else {
+			readyBtn.innerText = "준비 완료";
+			readyBtn.classList.add("ready");
+			getSocket().emit(window.events.readyGame);
+		}
+	});
 }
 
 if (finalYes) {
-  finalYes.addEventListener("click", () => {
-    getSocket().emit(window.events.finalYes);
-    finalOverlay.style.display = "none";
-  });
+	finalYes.addEventListener("click", () => {
+		getSocket().emit(window.events.finalYes);
+		finalOverlay.style.display = "none";
+	});
 }
 if (finalNo) {
-  finalNo.addEventListener("click", () => {
-    getSocket().emit(window.events.finalNo);
-    finalOverlay.style.display = "none";
-  });
+	finalNo.addEventListener("click", () => {
+		getSocket().emit(window.events.finalNo);
+		finalOverlay.style.display = "none";
+	});
 }
