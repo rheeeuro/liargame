@@ -55,6 +55,7 @@ const socketController = (socket, io) => {
         sendPlayerVoteUpdate();
         superBroadcast(events.voteStarted);
         superBroadcast(events.revoteNotification);
+        timeout = setTimeout(handleVoteEnded, 31000);
       }, 5000);
     } else {
       voted = max;
@@ -95,6 +96,7 @@ const socketController = (socket, io) => {
         sendPlayerVoteUpdate();
         superBroadcast(events.voteStarted);
         superBroadcast(events.revoteNotification);
+        timeout = setTimeout(handleVoteEnded, 31000);
       }, 5000);
     }
   };

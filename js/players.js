@@ -183,6 +183,7 @@ export const handleGameStarted = ({ liar, word }) => {
   );
   setCard(liar, word);
 
+  clearInterval(intervalId);
   let time = WORD_TIME + 1;
   intervalId = setInterval(() => {
     time -= 1;
@@ -276,6 +277,7 @@ export const handleRevoteNotification = () => {
 };
 
 const activateVoteTimer = () => {
+  clearInterval(intervalId);
   let time = VOTE_TIME + 1;
   intervalId = setInterval(() => {
     time -= 1;
@@ -290,6 +292,7 @@ const activateVoteTimer = () => {
 };
 
 export const handleInvalidVote = ({ duplicated }) => {
+  clearInterval(intervalId);
   if (duplicated) {
     setNotifs(
       `투표가 종료되었습니다. <br/>최다득표자가 여러명이므로 5초 뒤 재투표를 진행합니다.`
@@ -350,6 +353,7 @@ export const handleVoteFailed = ({ liarId, nickname, color, answer }) => {
 };
 
 const resultTimer = () => {
+  clearInterval(intervalId);
   let time = RESULT_TIME + 1;
   intervalId = setInterval(() => {
     time -= 1;
@@ -379,6 +383,7 @@ const updateTimer = (text) => {
 };
 
 export const handleFinalAnounce = ({ voted }) => {
+  clearInterval(intervalId);
   setNotifs(
     `<span style="color:${voted.color}">${voted.nickname}</span>님이 라이어로 지목되셨습니다. <br/>30초간 최후의 변론을 해주세요.`
   );
