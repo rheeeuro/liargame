@@ -468,17 +468,17 @@ const words = [
   /**
    * 게임
    */
-  { word: "리그오브레젼드", category: "게임" },
-  { word: "배틀그라운드", category: "게임" },
-  { word: "오버워치", category: "게임" },
-  { word: "메이플", category: "게임" },
-  { word: "리니지", category: "게임" },
-  { word: "스타크래프트", category: "게임" },
-  { word: "피파온라인", category: "게임" },
-  { word: "겟엠프드", category: "게임" },
-  { word: "디아블로", category: "게임" },
-  { word: "마비노기", category: "게임" },
-  { word: "포트리스", category: "게임" },
+  // { word: "리그오브레젼드", category: "게임" },
+  // { word: "배틀그라운드", category: "게임" },
+  // { word: "오버워치", category: "게임" },
+  // { word: "메이플", category: "게임" },
+  // { word: "리니지", category: "게임" },
+  // { word: "스타크래프트", category: "게임" },
+  // { word: "피파온라인", category: "게임" },
+  // { word: "겟엠프드", category: "게임" },
+  // { word: "디아블로", category: "게임" },
+  // { word: "마비노기", category: "게임" },
+  // { word: "포트리스", category: "게임" },
 
   /**
    * 직업

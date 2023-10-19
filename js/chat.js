@@ -1,5 +1,5 @@
 import { handleRequestAnswer } from "./answer.js";
-import { chatInput, hintIntervalId, setNotifs } from "./players.js";
+import { chatInput, intervalId, setNotifs } from "./players.js";
 import { getSocket } from "./sockets.js";
 
 const chatContainer = document.getElementById("jsChatContainer");
@@ -65,7 +65,7 @@ const handleSendHint = (event) => {
 };
 
 export const autoSendHint = (value) => {
-  clearInterval(hintIntervalId);
+  clearInterval(intervalId);
   document.getElementById("jsTimer").innerHTML = "";
   getSocket().emit(window.events.sendHint, { hint: value });
   closeHintModal();
@@ -84,6 +84,8 @@ export const handleNewHint = ({ hint, nickname, color }) => {
 };
 
 export const handleVoteStarted = () => {
+  
+
   const voteCounters = document.querySelectorAll(".voteCounter");
   voteCounters.forEach((element) => {
     element.style.display = "flex";

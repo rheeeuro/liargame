@@ -22,27 +22,14 @@ export const chatInput = document.getElementById("jsChatInput");
 const WORD_TIME = 10;
 const HINT_TIME = 30;
 const DUPLICATED_TIME = 5;
+const VOTE_TIME = 30;
 const RESULT_TIME = 10;
 const FINAL_TIME = 30;
 const SECOND_HINT_TIME = 60;
 
-export let hintIntervalId = null;
-let wordIntervalId = null;
-let duplicatedIntervalId = null;
-let resultIntervalId = null;
-let finalAnounceIntervalId = null;
-let secondHintIntervalId = null;
+export let intervalId = null;
 
 let inProgress = false;
-
-export const clearAllInterval = () => {
-  clearInterval(hintIntervalId);
-  clearInterval(wordIntervalId);
-  clearInterval(duplicatedIntervalId);
-  clearInterval(resultIntervalId);
-  clearInterval(finalAnounceIntervalId);
-  clearInterval(secondHintIntervalId);
-};
 
 const addPlayers = (players) => {
   if (!inProgress) {
@@ -197,39 +184,39 @@ export const handleGameStarted = ({ liar, word }) => {
   setCard(liar, word);
 
   let time = WORD_TIME + 1;
-  wordIntervalId = setInterval(() => {
+  intervalId = setInterval(() => {
     time -= 1;
     updateTimer(time);
 
     if (time === 0) {
       timer.classList.remove("tick");
       timer.innerHTML = "";
-      clearInterval(wordIntervalId);
+      clearInterval(intervalId);
     }
   }, 1000);
 };
 
 export const handleSecondHintNotif = () => {
-  clearInterval(hintIntervalId);
+  clearInterval(intervalId);
   setNotifs(
     "첫번째 제시어 설명이 모두 끝났습니다. <br/>두번째 설명 전, 60초간 자유롭게 대화해주세요."
   );
   chatInput.style.display = "flex";
   let time = SECOND_HINT_TIME + 1;
-  secondHintIntervalId = setInterval(() => {
+  intervalId = setInterval(() => {
     time -= 1;
     updateTimer(time);
 
     if (time === 0) {
       timer.classList.remove("tick");
       timer.innerHTML = "";
-      clearInterval(secondHintIntervalId);
+      clearInterval(intervalId);
     }
   }, 1000);
 };
 
 export const handleHintTurn = ({ id, nickname, color }) => {
-  clearInterval(hintIntervalId);
+  clearInterval(intervalId);
   chatInput.style.display = "none";
   setNotifs(
     `<span style="color:${color}">${nickname}</span>님의 차례입니다. <br/>30초 내에 제시어에 대한 설명을 작성해주세요.`
@@ -240,7 +227,7 @@ export const handleHintTurn = ({ id, nickname, color }) => {
   }
 
   let time = HINT_TIME + 1;
-  hintIntervalId = setInterval(() => {
+  intervalId = setInterval(() => {
     time -= 1;
     updateTimer(time);
 
@@ -252,7 +239,7 @@ export const handleHintTurn = ({ id, nickname, color }) => {
 
 export const handleGameEnded = () => {
   inProgress = false;
-  clearAllInterval();
+  clearInterval(intervalId);
   closeAnswerModal();
   closeHintModal();
 
@@ -271,10 +258,11 @@ export const handleGameEnded = () => {
 };
 
 export const handleVoteNotification = () => {
-  clearInterval(hintIntervalId);
+  clearInterval(intervalId);
   chatInput.style.display = "flex";
   timer.classList.remove("tick");
   timer.innerHTML = "";
+  activateVoteTimer();
   setNotifs(
     "제시어 설명이 종료되었습니다. <br/>라이어로 의심되는 사람을 선택해주세요."
   );
@@ -283,7 +271,22 @@ export const handleVoteNotification = () => {
 export const handleRevoteNotification = () => {
   timer.classList.remove("tick");
   timer.innerHTML = "";
+  activateVoteTimer();
   setNotifs("재투표를 진행합니다. <br/>라이어로 의심되는 사람을 선택해주세요.");
+};
+
+const activateVoteTimer = () => {
+  let time = VOTE_TIME + 1;
+  intervalId = setInterval(() => {
+    time -= 1;
+    updateTimer(time);
+
+    if (time === 0) {
+      clearInterval(intervalId);
+      timer.classList.remove("tick");
+      timer.innerText = "";
+    }
+  }, 1000);
 };
 
 export const handleInvalidVote = ({ duplicated }) => {
@@ -298,14 +301,14 @@ export const handleInvalidVote = ({ duplicated }) => {
   }
   disableVote();
   let time = DUPLICATED_TIME + 1;
-  duplicatedIntervalId = setInterval(() => {
+  intervalId = setInterval(() => {
     time -= 1;
     updateTimer(time);
 
     if (time === 0) {
       timer.classList.remove("tick");
       timer.innerHTML = "";
-      clearInterval(duplicatedIntervalId);
+      clearInterval(intervalId);
     }
   }, 1000);
 };
@@ -348,7 +351,7 @@ export const handleVoteFailed = ({ liarId, nickname, color, answer }) => {
 
 const resultTimer = () => {
   let time = RESULT_TIME + 1;
-  resultIntervalId = setInterval(() => {
+  intervalId = setInterval(() => {
     time -= 1;
     updateTimer(time);
 
@@ -381,12 +384,12 @@ export const handleFinalAnounce = ({ voted }) => {
   );
   disableVote();
   let time = FINAL_TIME + 1;
-  finalAnounceIntervalId = setInterval(() => {
+  intervalId = setInterval(() => {
     time -= 1;
     updateTimer(time);
 
     if (time === 0) {
-      clearInterval(finalAnounceIntervalId);
+      clearInterval(intervalId);
       timer.classList.remove("tick");
       timer.innerText = "";
       requestFinalVote(voted);

@@ -191,6 +191,7 @@ const socketController = (socket, io) => {
       superBroadcast(events.voteStarted);
       sendPlayerVoteUpdate();
       superBroadcast(events.voteNotification);
+      timeout = setTimeout(handleVoteEnded, 31000);
     } else if (hintCount === sockets.length) {
       superBroadcast(events.secondHintNotif);
       timeout = setTimeout(() => {
@@ -236,6 +237,7 @@ const socketController = (socket, io) => {
     });
 
     if (voteCount === sockets.length) {
+      clearTimeout(timeout);
       handleVoteEnded();
     }
   });
