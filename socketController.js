@@ -266,7 +266,7 @@ const socketController = (socket, io) => {
   });
 
   socket.on(events.sendAnswer, ({ input }) => {
-    if (input.trim() === word.word.trim()) {
+    if (input.replaceAll(" ", "") === word.word.replaceAll(" ", "")) {
       liar.point += 1;
       superBroadcast(events.liarWin, { answer: word.word });
     } else {
